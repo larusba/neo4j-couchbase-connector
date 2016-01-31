@@ -1,0 +1,114 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>it.neo4j.integration</groupId>
+	<artifactId>couchbase</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>Neo4j - Couchbase Connector</name>
+	<description>A project that builds a communication API between Neo4j and Couchbase</description>
+	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
+
+	<scm>
+		<connection>scm:git:git://github.com/larusba/neo4j-couchbase-connector.git</connection>
+		<developerConnection>scm:git:git@github.com:larusba/neo4j-couchbase-connector.git</developerConnection>
+		<url>https://github.com/larusba/neo4j-couchbase-connector.git</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<properties>
+		<java.version>1.8</java.version>
+		
+		<neo4j.version>2.3.2</neo4j.version>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+	<developers>
+		<developer>
+			<id>larus</id>
+			<name>The LARUS Team</name>
+			<url>http://www.larus-ba.it/</url>
+			<organization>LARUS Business Automation</organization>
+			<organizationUrl>http://www.larus-ba.it/</organizationUrl>
+		</developer>
+	</developers>
+
+	<dependencies>
+
+		<!-- Neo4j -->
+		
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>${neo4j.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-kernel</artifactId>
+            <version>${neo4j.version}</version>
+            <type>test-jar</type>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-io</artifactId>
+            <version>${neo4j.version}</version>
+            <type>test-jar</type>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.neo4j.app</groupId>
+            <artifactId>neo4j-server</artifactId>
+            <version>${neo4j.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+            <optional>true</optional>
+        </dependency>
+		
+		<!-- Testing -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+	
+    <build>
+    
+        <plugins>
+        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            
+		</plugins>
+	
+	</build>
+		
+</project>
