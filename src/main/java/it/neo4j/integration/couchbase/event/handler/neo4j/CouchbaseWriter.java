@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.neo4j.integration.couchbase;
+package it.neo4j.integration.couchbase.event.handler.neo4j;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.event.LabelEntry;
@@ -22,15 +22,20 @@ import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
 /**
- * This class implements a {@link TransactionEventHandler} that prints the data
- * that has changed during the course of one transaction.
- * 
- * It's just meant to showcase how the {@link TransactionEventHandler} works.
- * 
+ * This class is responsible for filtering and routing events to the Couchbase
+ * in the form of N1QL statements.
+ * <p/>
+ * PLEASE NOTICE: this class just meant to showcase how the
+ * {@link TransactionEventHandler} works. <br/>
+ * It implements a {@link TransactionEventHandler} that prints the data that has
+ * changed during the course of one transaction. <br/>
+ * TODO print all other info provided by the {@link TransactionData} parameter
+ *
  * @author Lorenzo Speranzoni
+ * 
+ * @see TransactionEventHandler, TransactionData
  */
-// TODO print all other info provided by the {@link TransactionData} parameter
-public class TransactionEventHandlerPrinter implements TransactionEventHandler<Void> {
+public class CouchbaseWriter implements TransactionEventHandler<Void> {
 
 	/**
 	 * @see org.neo4j.graphdb.event.TransactionEventHandler#beforeCommit(org.neo4j.graphdb.event.TransactionData)

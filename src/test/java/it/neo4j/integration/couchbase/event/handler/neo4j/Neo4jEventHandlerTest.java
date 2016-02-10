@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.neo4j.integration.couchbase;
+package it.neo4j.integration.couchbase.event.handler.neo4j;
 
 import org.junit.Test;
 import org.neo4j.graphdb.DynamicLabel;
@@ -23,13 +23,12 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
+import it.neo4j.integration.couchbase.event.handler.neo4j.CouchbaseWriter;
+
 /**
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- *
  * This test class registers a {@link TransactionEventHandler} that prints all
  * the events that has happened in each transaction through the
- * {@link TransactionEventHandlerPrinter} implementation and creates a
+ * {@link CouchbaseWriter} implementation and creates a
  * {@link Node} with <code>Artist</code>{@link Label} and three properties
  * <code>firstName</code>, <code>secondName>/code> and <code>lastName</code>.
  * 
@@ -38,14 +37,14 @@ import org.neo4j.test.TestGraphDatabaseFactory;
  * 
  * @author Lorenzo Speranzoni
  */
-public class Neo4jTransactionHandlerTest {
+public class Neo4jEventHandlerTest {
 
 	@Test
 	public void shouldTraceChangesOnGraph() {
 
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 
-		database.registerTransactionEventHandler(new TransactionEventHandlerPrinter());
+		database.registerTransactionEventHandler(new CouchbaseWriter());
 
 		try (Transaction tx = database.beginTx()) {
 
