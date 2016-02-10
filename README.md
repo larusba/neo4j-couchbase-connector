@@ -4,6 +4,21 @@ Welcome to the [Neo4j](http://neo4j.com/) - [Couchbase](http://couchbase.com/) C
 
 This project is part of the "LARUS Integration Framework for Neo4j".
 
+Please be aware that this project is still under development and at this very first stage it will work only for testing.
+
+## Sources of Inspiration
+
+We'd like to thank you the authors of:
+* The [Neo4j - Mongo Connector](https://github.com/neo4j-contrib/neo4j_doc_manager), for the ideas for mapping the two different data models;
+* The [Couchbase - Kafka Connector](http://developer.couchbase.com/documentation/server/4.1/connectors/kafka-1.2/kafka-intro.html), where we took inspiration on how to implement the mutation event dispatcher.
+
+## Thank you
+
+We'd also like to thank you for their precious support:
+* [Michael Hunger](https://twitter.com/mesirii), NEO TECHNOLOGY - Head of Developer Relations, Caretaker Neo4j Community
+* [Michael Nitschinger](https://twitter.com/daschl), COUCHBASE - Lead Developer of the Couchbase Java SDK
+
+
 ## License
 
 Licensed under the Apache License, Version 2.0 (the "License").
