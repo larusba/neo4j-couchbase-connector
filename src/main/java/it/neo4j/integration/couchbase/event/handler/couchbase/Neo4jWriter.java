@@ -15,6 +15,9 @@
  */
 package it.neo4j.integration.couchbase.event.handler.couchbase;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.couchbase.client.core.message.dcp.MutationMessage;
 import com.couchbase.client.core.message.dcp.RemoveMessage;
 import com.couchbase.client.deps.com.lmax.disruptor.EventHandler;
@@ -31,8 +34,7 @@ import it.neo4j.integration.couchbase.event.dispatcher.couchbase.CouchbaseEventF
  */
 public class Neo4jWriter implements EventHandler<CouchbaseEvent> {
 
-	public Neo4jWriter() {
-	}
+	private static Logger LOGGER = LoggerFactory.getLogger(Neo4jWriter.class);
 
 	/**
 	 * Handles {@link CouchbaseEvent}s that come into the response RingBuffer.
@@ -57,14 +59,15 @@ public class Neo4jWriter implements EventHandler<CouchbaseEvent> {
 	 */
 	private void buildAndSendMutationCommandToNeo4j(MutationMessage mutationMessage) {
 		
-		System.out.println("Document with key = " + mutationMessage.key() + " has been updated.");
-		System.out.println("New content is: ");
+		LOGGER.debug("Document with key = '" + mutationMessage.key() + "' has been updated.");
+		LOGGER.debug("New content is: ");
 		ByteBuf buffer = mutationMessage.content();
+		String content = "";
 		for (int i = 0; i < buffer.capacity(); i++) {
 			byte b = buffer.getByte(i);
-			System.out.print((char) b);
+			content += (char) b;
 		}
-		System.out.println();
+		LOGGER.debug(content);
 	}
 
 	/**
@@ -75,6 +78,6 @@ public class Neo4jWriter implements EventHandler<CouchbaseEvent> {
 	 */
 	private void buildAndSendRemoveCommandToNeo4j(RemoveMessage removeMessage) {
 		
-		System.out.println("Document with key = " + removeMessage.key() + " has been removed.");
+		LOGGER.debug("Document with key = '" + removeMessage.key() + "' has been removed.");
 	}
 }

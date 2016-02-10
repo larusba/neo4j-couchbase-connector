@@ -20,6 +20,8 @@ import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is responsible for filtering and routing events to the Couchbase
@@ -37,11 +39,13 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
  */
 public class CouchbaseWriter implements TransactionEventHandler<Void> {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(CouchbaseWriter.class);
+	
 	/**
 	 * @see org.neo4j.graphdb.event.TransactionEventHandler#beforeCommit(org.neo4j.graphdb.event.TransactionData)
 	 */
 	public Void beforeCommit(TransactionData data) throws Exception {
-		System.out.println("Transaction is about to be committed.");
+		LOGGER.debug("Transaction is about to be committed.");
 		printTransactionData(data);
 		return null;
 	}
@@ -51,7 +55,7 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 *      java.lang.Object)
 	 */
 	public void afterCommit(TransactionData data, Void state) {
-		System.out.println("Transaction has been committed successfully.");
+		LOGGER.debug("Transaction has been committed successfully.");
 		printTransactionData(data);
 	}
 
@@ -60,7 +64,7 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 *      java.lang.Object)
 	 */
 	public void afterRollback(TransactionData data, Void state) {
-		System.out.println("Transaction has rolled back for some reason.");
+		LOGGER.debug("Transaction has rolled back for some reason.");
 		printTransactionData(data);
 	}
 
@@ -81,10 +85,10 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 *            the data that has changed during the course of one transaction
 	 */
 	public void printLabelAssigned(TransactionData data) {
-		System.out.println("Labels assigned:");
+		LOGGER.debug("Labels assigned:");
 		Iterable<LabelEntry> assignedLabels = data.assignedLabels();
 		for (LabelEntry assignedLabel : assignedLabels) {
-			System.out.println(assignedLabel.label());
+			LOGGER.debug(assignedLabel.label().name());
 		}
 	}
 
@@ -94,10 +98,10 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 *            the data that has changed during the course of one transaction
 	 */
 	public void printNodePropertiesAssigned(TransactionData data) {
-		System.out.println("Node properties assigned:");
+		LOGGER.debug("Node properties assigned:");
 		Iterable<PropertyEntry<Node>> assignedNodeProperties = data.assignedNodeProperties();
 		for (PropertyEntry<Node> assignedNodeProperty : assignedNodeProperties) {
-			System.out.println(assignedNodeProperty.key() + ": " + assignedNodeProperty.value());
+			LOGGER.debug(assignedNodeProperty.key() + ": " + assignedNodeProperty.value());
 		}
 	}
 }

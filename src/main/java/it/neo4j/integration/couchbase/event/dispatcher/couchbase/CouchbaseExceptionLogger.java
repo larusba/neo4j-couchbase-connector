@@ -15,11 +15,11 @@
  */
 package it.neo4j.integration.couchbase.event.dispatcher.couchbase;
 
-import com.couchbase.client.core.logging.CouchbaseLogger;
-import com.couchbase.client.core.logging.CouchbaseLoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.couchbase.client.deps.com.lmax.disruptor.ExceptionHandler;
 import com.couchbase.client.deps.com.lmax.disruptor.dsl.Disruptor;
-
 /**
  * {@link ExceptionHandler} that just logs the exception happening while
  * {@link CouchbaseEvent}s are managed by the {@link Disruptor}.
@@ -30,7 +30,7 @@ import com.couchbase.client.deps.com.lmax.disruptor.dsl.Disruptor;
  */
 public class CouchbaseExceptionLogger implements ExceptionHandler<Object> {
 
-	private static final CouchbaseLogger LOGGER = CouchbaseLoggerFactory.getInstance(CouchbaseExceptionLogger.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(CouchbaseExceptionLogger.class);
 
 	@Override
 	public void handleEventException(Throwable ex, long sequence, Object event) {
