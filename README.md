@@ -8,7 +8,7 @@ Please be aware that this project is still under development and at this very fi
 
 ## Sources of Inspiration
 
-We'd like to thank you the authors of:
+We'd like to thank the authors of:
 * The [Neo4j - Mongo Connector](https://github.com/neo4j-contrib/neo4j_doc_manager), for the ideas for mapping the two different data models;
 * The [Couchbase - Kafka Connector](http://developer.couchbase.com/documentation/server/4.1/connectors/kafka-1.2/kafka-intro.html), where we took inspiration on how to implement the mutation event dispatcher.
 
