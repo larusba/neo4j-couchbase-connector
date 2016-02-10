@@ -14,7 +14,7 @@ We'd like to thank the authors of:
 
 ## Thank you
 
-We'd also like to thank you for their precious support:
+We'd also like to thank for their precious support:
 * [Michael Hunger](https://twitter.com/mesirii), NEO TECHNOLOGY - Head of Developer Relations, Caretaker Neo4j Community
 * [Michael Nitschinger](https://twitter.com/daschl), COUCHBASE - Lead Developer of the Couchbase Java SDK
 
