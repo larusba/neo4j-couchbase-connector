@@ -21,7 +21,7 @@ We'd also like to thank for their precious support:
 
 ## License
 
-Copyright (c) 2013-16 GraphAware
+Copyright (c) 2013-16 [LARUS Business Automation S.r.l.](http://www.larus-ba.it)
 
 "LARUS Integration Framework for Neo4j" is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published by the Free Software Foundation,
