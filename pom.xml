@@ -21,10 +21,26 @@
 
 	<licenses>
 		<license>
-			<name>Apache License, Version 2</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<name>GNU General Public License, version 3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<organization>
+		<name>LARUS Business Automation Srl</name>
+		<url>http://www.larus-ba.it</url>
+	</organization>
+	
+	<developers>
+		<developer>
+			<id>larus</id>
+			<name>The LARUS Team</name>
+			<url>http://www.larus-ba.it/</url>
+			<organization>LARUS Business Automation</organization>
+			<organizationUrl>http://www.larus-ba.it/</organizationUrl>
+		</developer>
+	</developers>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -35,16 +51,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-
-	<developers>
-		<developer>
-			<id>larus</id>
-			<name>The LARUS Team</name>
-			<url>http://www.larus-ba.it/</url>
-			<organization>LARUS Business Automation</organization>
-			<organizationUrl>http://www.larus-ba.it/</organizationUrl>
-		</developer>
-	</developers>
 
 	<dependencies>
 
@@ -96,7 +102,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.6</version>
 		</dependency>
-		
+
 		<!-- Testing -->
 
 		<dependency>
