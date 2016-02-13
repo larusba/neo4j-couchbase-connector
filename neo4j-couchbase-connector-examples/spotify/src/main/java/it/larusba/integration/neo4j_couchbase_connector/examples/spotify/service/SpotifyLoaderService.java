@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.neo4j.integration.couchbase.example.spotify.service;
+package it.larusba.integration.neo4j_couchbase_connector.examples.spotify.service;
 
 /**
  * A simple interface for the service that retrieve data
@@ -21,11 +21,11 @@ package it.neo4j.integration.couchbase.example.spotify.service;
  * 
  * @author Mauro Roiter
  */
-public interface SpotifyDataRetrieverAbstract 
+public interface SpotifyLoaderService 
 {
-	public String getU2Artist();
+	public String getArtist(String artistId);
 
-	public String getU2Albums();
+	public String getAlbums(String artistId);
 
-	public String getU2RelatedArtists();
+	public String getRelatedArtists(String artistId);
 }

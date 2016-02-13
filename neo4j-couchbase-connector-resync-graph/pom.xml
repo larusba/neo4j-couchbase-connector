@@ -4,16 +4,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>it.neo4j.integration</groupId>
-		<artifactId>couchbase</artifactId>
+		<groupId>it.larusba.integration</groupId>
+		<artifactId>neo4j-couchbase-connector-parent</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>couchbase-to-neo4j</artifactId>
+	<artifactId>neo4j-couchbase-connector-resync-graph</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Neo4j to Couchbase Connector | Neo4j --> Couchbase</name>
-	<description>A project that builds a communication API between Neo4j and Couchbase. This module is responsible for resynching Couchbase documents whenever Graph has changed.</description>
+	<description>A project that builds a communication API between Neo4j and Couchbase. This module is responsible for resynching Neo4j every time a Couchbase document is updated.</description>
 	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
 
 </project>

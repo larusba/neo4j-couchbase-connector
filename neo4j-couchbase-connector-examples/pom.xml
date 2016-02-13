@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>it.larusba.integration</groupId>
+		<artifactId>neo4j-couchbase-connector-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>neo4j-couchbase-connector-examples</artifactId>
+	<packaging>pom</packaging>
+
+	<name>Neo4j - Couchbase Connector | Couchbase --> Neo4j</name>
+	<description>A project that builds a communication API between Neo4j and Couchbase. This module contains some usage examples.</description>
+	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
+
+	<properties>
+		<spring.web.version>4.2.4.RELEASE</spring.web.version>
+	</properties>
+	
+	<dependencies>
+
+		<!-- Spring Web -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.web.version}</version>
+		</dependency>
+
+	</dependencies>
+	
+</project>

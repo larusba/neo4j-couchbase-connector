@@ -13,15 +13,14 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.neo4j.integration.couchbase.example;
+package it.larusba.integration.neo4j_couchbase_connector.examples.spotify;
 
 import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 
-import it.neo4j.integration.couchbase.example.spotify.service.impl.SpotifyDataRetriever;
+import it.larusba.integration.neo4j_couchbase_connector.examples.spotify.service.SpotifyLoaderService;
+import it.larusba.integration.neo4j_couchbase_connector.examples.spotify.service.impl.SpotifyLoaderServiceImpl;
 
 /**
  * A simple Couchbase loader that store some JSON documents
@@ -29,35 +28,29 @@ import it.neo4j.integration.couchbase.example.spotify.service.impl.SpotifyDataRe
  * 
  * @author Riccardo Birello
  */
-public class CouchbaseLoader
+public class SpotifyCouchbaseLoader
 {
-	private SpotifyDataRetriever dataRetriever = new SpotifyDataRetriever();
-	
-	public void loadJson(Cluster cluster, Bucket bucket) 
+	public void loadJson(Bucket bucket, String artistId) 
 	{
-
-		String jsonU2Artist = dataRetriever.getU2Artist();
+		SpotifyLoaderService loaderService = new SpotifyLoaderServiceImpl();
+		
+		String jsonU2Artist = loaderService.getArtist(artistId);
 		
 		JsonObject json = JsonObject.fromJson(jsonU2Artist);
 		JsonDocument docs = JsonDocument.create("artist", json);
-		JsonDocument responses = bucket.upsert(docs);
+		bucket.upsert(docs);
 		
-		String jsonU2Albums = dataRetriever.getU2Albums();
+		String jsonU2Albums = loaderService.getAlbums(artistId);
 		
 		json = JsonObject.fromJson(jsonU2Albums);
-		
-//		JsonArray array = json.getArray("items");
-//		Object object = array.getObject(0).get("name");
-		
 		docs = JsonDocument.create("albums", json);
-		responses = bucket.upsert(docs);
+		bucket.upsert(docs);
 		
-		String jsonU2RelatedArtists = dataRetriever.getU2RelatedArtists();
+		String jsonU2RelatedArtists = loaderService.getRelatedArtists(artistId);
 		
 		json = JsonObject.fromJson(jsonU2RelatedArtists);
 		docs = JsonDocument.create("relArtists", json);
-		responses = bucket.upsert(docs);
+		bucket.upsert(docs);
 	}
-	
 }
 

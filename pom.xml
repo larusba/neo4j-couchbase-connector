@@ -3,10 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>it.neo4j.integration</groupId>
-	<artifactId>couchbase</artifactId>
-	<packaging>pom</packaging>
+	<groupId>it.larusba.integration</groupId>
+	<artifactId>neo4j-couchbase-connector-parent</artifactId>
 	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
 	<name>Neo4j - Couchbase Connector</name>
 	<description>A project that builds a communication API between Neo4j and Couchbase</description>
@@ -26,8 +26,9 @@
 	</organization>
 	
     <modules>
-        <module>neo4j-to-couchbase</module>
-        <module>couchbase-to-neo4j</module>
+        <module>neo4j-couchbase-connector-resync-graph</module>
+        <module>neo4j-couchbase-connector-resync-docs</module>
+        <module>neo4j-couchbase-connector-examples</module>
     </modules>
 
 	<scm>
@@ -52,7 +53,6 @@
 
 		<neo4j.version>2.3.2</neo4j.version>
 		<couchbase.version>2.2.4</couchbase.version>
-		<spring.web.version>4.2.4.RELEASE</spring.web.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -93,13 +93,6 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- Spring Web -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.web.version}</version>
 		</dependency>
 
 		<!-- Couchbase -->

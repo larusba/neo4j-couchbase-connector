@@ -13,48 +13,42 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.neo4j.integration.couchbase.example.spotify.service.impl;
+package it.larusba.integration.neo4j_couchbase_connector.examples.spotify.service.impl;
 
 import org.springframework.web.client.RestTemplate;
 
-import it.neo4j.integration.couchbase.example.spotify.service.SpotifyDataRetrieverAbstract;
+import it.larusba.integration.neo4j_couchbase_connector.examples.spotify.service.SpotifyLoaderService;
 
 /**
- * This class implements the interface {@link SpotifyDataRetrieverAbstract}
+ * This class implements the interface {@link SpotifyLoaderService}
  * and expose some methods for extracting data from Spotify endpoints.
  * In this example, methods extract data about the Irish rock band U2
  * 
  * @author Mauro Roiter
  */
-public class SpotifyDataRetriever implements SpotifyDataRetrieverAbstract
+public class SpotifyLoaderServiceImpl implements SpotifyLoaderService
 {
 	public RestTemplate restTemplate = new RestTemplate();
 	
 	@Override
-	public String getU2Artist() 
+	public String getArtist(String artistId) 
 	{
-		String artistId = "51Blml2LZPmy7TTiAg47vQ";
-		
 		String jsonResult = restTemplate.getForObject("https://api.spotify.com/v1/artists/"+artistId, String.class);
 		
 		return jsonResult;
 	}
 	
 	@Override
-	public String getU2Albums() 
+	public String getAlbums(String artistId) 
 	{
-		String artistId = "51Blml2LZPmy7TTiAg47vQ";
-		
 		String jsonResult = restTemplate.getForObject("https://api.spotify.com/v1/artists/"+artistId+"/albums", String.class);
 		
 		return jsonResult;
 	}
 	
 	@Override
-	public String getU2RelatedArtists()
+	public String getRelatedArtists(String artistId)
 	{
-		String artistId = "51Blml2LZPmy7TTiAg47vQ";
-		
 		String jsonResult = restTemplate.getForObject("https://api.spotify.com/v1/artists/"+artistId+"/related-artists", String.class);
 		
 		return jsonResult;
