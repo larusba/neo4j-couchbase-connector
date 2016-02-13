@@ -2,7 +2,7 @@
 
 This module is part of the [Neo4j - Couchbase Connector](https://github.com/larusba/neo4j-couchbase-connector) project and the "LARUS Integration Framework for Neo4j".
 
-It is responsible for resynching Couchbase every time the Neo4j graph is updated. It accomplishes this task by implementing an event listener for Neo4j mutations. All mutation are converted into a proper N1QL statement that is submitted to Couchbase via SDK API.
+**It is responsible for resynching Couchbase every time the Neo4j graph is updated**. It accomplishes this task by implementing an event listener for Neo4j mutations. All mutation are converted into a proper N1QL statement that is submitted to Couchbase via SDK API.
 
 Please be aware that this project is still under development and at this very first stage it will work only for testing.
 

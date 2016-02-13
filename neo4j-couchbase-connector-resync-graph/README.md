@@ -2,7 +2,7 @@
 
 This module is part of the [Neo4j - Couchbase Connector](https://github.com/larusba/neo4j-couchbase-connector) project and the "LARUS Integration Framework for Neo4j".
 
-It is responsible for resynching Neo4j every time a Couchbase document is updated. It accomplishes this task by implementing an event listener for Couchbase mutations. All mutation are converted into a proper Cypher statement that is submitted to Neo4j via REST API.
+**It is responsible for resynching Neo4j every time a Couchbase document is updated**. It accomplishes this task by implementing an event listener for Couchbase mutations. All mutation are converted into a proper Cypher statement that is submitted to Neo4j via REST API.
 
 Please be aware that this project is still under development and at this very first stage it will work only for testing.
 
