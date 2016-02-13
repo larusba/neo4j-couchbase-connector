@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>it.neo4j.integration</groupId>
+		<artifactId>couchbase</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>couchbase-to-neo4j</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Neo4j to Couchbase Connector | Neo4j --> Couchbase</name>
+	<description>A project that builds a communication API between Neo4j and Couchbase. This module is responsible for resynching Couchbase documents whenever Graph has changed.</description>
+	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
+
+</project>

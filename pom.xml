@@ -5,19 +5,12 @@
 
 	<groupId>it.neo4j.integration</groupId>
 	<artifactId>couchbase</artifactId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 
 	<name>Neo4j - Couchbase Connector</name>
 	<description>A project that builds a communication API between Neo4j and Couchbase</description>
 	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
-
-	<scm>
-		<connection>scm:git:git://github.com/larusba/neo4j-couchbase-connector.git</connection>
-		<developerConnection>scm:git:git@github.com:larusba/neo4j-couchbase-connector.git</developerConnection>
-		<url>https://github.com/larusba/neo4j-couchbase-connector.git</url>
-		<tag>HEAD</tag>
-	</scm>
 
 	<licenses>
 		<license>
@@ -32,6 +25,18 @@
 		<url>http://www.larus-ba.it</url>
 	</organization>
 	
+    <modules>
+        <module>neo4j-to-couchbase</module>
+        <module>couchbase-to-neo4j</module>
+    </modules>
+
+	<scm>
+		<connection>scm:git:git://github.com/larusba/neo4j-couchbase-connector.git</connection>
+		<developerConnection>scm:git:git@github.com:larusba/neo4j-couchbase-connector.git</developerConnection>
+		<url>https://github.com/larusba/neo4j-couchbase-connector.git</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<developers>
 		<developer>
 			<id>larus</id>
