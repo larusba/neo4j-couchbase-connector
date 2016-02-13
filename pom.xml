@@ -31,7 +31,7 @@
 		<name>LARUS Business Automation Srl</name>
 		<url>http://www.larus-ba.it</url>
 	</organization>
-	
+
 	<developers>
 		<developer>
 			<id>larus</id>
@@ -47,6 +47,7 @@
 
 		<neo4j.version>2.3.2</neo4j.version>
 		<couchbase.version>2.2.4</couchbase.version>
+		<spring.web.version>4.2.4.RELEASE</spring.web.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -87,6 +88,13 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 			<optional>true</optional>
+		</dependency>
+
+		<!-- Spring Web -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.web.version}</version>
 		</dependency>
 
 		<!-- Couchbase -->
