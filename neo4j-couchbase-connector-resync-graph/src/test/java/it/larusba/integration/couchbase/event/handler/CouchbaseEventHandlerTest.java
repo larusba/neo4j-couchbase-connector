@@ -27,8 +27,8 @@ import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 
-import it.larusba.integration.couchbase.event.dispatcher.CouchbaseEventDispatcher;
-import it.larusba.integration.couchbase.event.handler.Neo4jWriter;
+import it.larusba.integration.neo4j_couchbase_connector.couchbase.event.dispatcher.CouchbaseEventDispatcher;
+import it.larusba.integration.neo4j_couchbase_connector.couchbase.event.handler.Neo4jWriter;
 
 /**
  * Test class to check whether the event handler

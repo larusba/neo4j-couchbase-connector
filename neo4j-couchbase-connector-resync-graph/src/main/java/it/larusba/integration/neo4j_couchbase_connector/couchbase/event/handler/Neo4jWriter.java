@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.larusba.integration.couchbase.event.handler;
+package it.larusba.integration.neo4j_couchbase_connector.couchbase.event.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import com.couchbase.client.core.message.dcp.RemoveMessage;
 import com.couchbase.client.deps.com.lmax.disruptor.EventHandler;
 import com.couchbase.client.deps.io.netty.buffer.ByteBuf;
 
-import it.larusba.integration.couchbase.event.dispatcher.CouchbaseEvent;
-import it.larusba.integration.couchbase.event.dispatcher.CouchbaseEventFilter;
+import it.larusba.integration.neo4j_couchbase_connector.couchbase.event.dispatcher.CouchbaseEvent;
+import it.larusba.integration.neo4j_couchbase_connector.couchbase.event.dispatcher.CouchbaseEventFilter;
 
 /**
  * This class is responsible for filtering and routing events to the Neo4j in

@@ -23,7 +23,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
-import it.larusba.integration.neo4j.event.handler.CouchbaseWriter;
+import it.larusba.integration.neo4j_couchbase_connector.neo4j.event.handler.CouchbaseWriter;
 
 /**
  * This test class registers a {@link TransactionEventHandler} that prints all

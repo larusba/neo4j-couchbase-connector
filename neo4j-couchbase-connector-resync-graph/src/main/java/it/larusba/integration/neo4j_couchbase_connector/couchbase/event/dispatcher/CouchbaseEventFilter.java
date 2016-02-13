@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.larusba.integration.couchbase.event.dispatcher;
+package it.larusba.integration.neo4j_couchbase_connector.couchbase.event.dispatcher;
 
 import com.couchbase.client.core.message.dcp.MutationMessage;
 import com.couchbase.client.core.message.dcp.RemoveMessage;

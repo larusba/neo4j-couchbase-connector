@@ -13,22 +13,21 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.larusba.integration.couchbase.document.transformer;
+package it.larusba.integration.neo4j_couchbase_connector.couchbase.event.dispatcher;
+
+import com.couchbase.client.deps.com.lmax.disruptor.EventFactory;
 
 /**
- * Tranformer for Couchbase Document.
- * 
+ * Factory class for {@link CouchbaseEvent}s.
+ *
  * @author Lorenzo Speranzoni
  * 
- * @see DocumentToCyhperTransformer
+ * @see EventFactory
  */
-public interface DocumentTransformer<T> {
+public class CouchbaseEventFactory implements EventFactory<CouchbaseEvent> {
 	
-	/**
-	 * 
-	 * @param documentKey
-	 * @param jsonDocument
-	 * @return
-	 */
-	T transform(String documentKey, String jsonDocument);
+    @Override
+    public CouchbaseEvent newInstance() {
+        return new CouchbaseEvent();
+    }
 }

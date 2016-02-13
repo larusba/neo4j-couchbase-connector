@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.larusba.integration.couchbase.document.transformer;
+package it.larusba.integration.neo4j_couchbase_connector.couchbase.document.transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import com.couchbase.client.java.document.json.JsonObject;
 public class DocumentToCyhperTransformer implements DocumentTransformer<String> {
 
 	/**
-	 * @see it.larusba.integration.couchbase.document.transformer.DocumentTransformer#transform(java.lang.String)
+	 * @see it.larusba.integration.neo4j_couchbase_connector.couchbase.document.transformer.DocumentTransformer#transform(java.lang.String)
 	 */
 	@Override
 	public String transform(String documentKey, String jsonDocument) {

@@ -17,6 +17,9 @@ package it.larusba.integration.couchbase.document.transformer;
 
 import org.junit.Test;
 
+import it.larusba.integration.neo4j_couchbase_connector.couchbase.document.transformer.DocumentToCyhperTransformer;
+import it.larusba.integration.neo4j_couchbase_connector.couchbase.document.transformer.DocumentTransformer;
+
 /**
  *
  * @author Lorenzo Speranzoni

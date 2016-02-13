@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.larusba.integration.couchbase.event.dispatcher;
+package it.larusba.integration.neo4j_couchbase_connector.couchbase.event.dispatcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

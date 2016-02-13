@@ -13,7 +13,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  */
-package it.larusba.integration.neo4j.event.handler;
+package it.larusba.integration.neo4j_couchbase_connector.neo4j.event.handler;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.event.LabelEntry;
