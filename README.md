@@ -6,6 +6,17 @@ This project is part of the "LARUS Integration Framework for Neo4j".
 
 Please be aware that this project is still under development and at this very first stage it will work only for testing.
 
+## Modules
+
+Current implementation provides 2 main modules:
+
+* [Resync Couchbase Module](./neo4j-couchbase-connector-resync-docs): responsible for resynching Couchbase every time the Neo4j graph is updated;
+* [Resync Neo4j Module](./neo4j-couchbase-connector-resync-graph): responsible for resynching Neo4j every time a Couchbase document is updated;
+
+and 1 examples folder:
+
+* [Examples](neo4j-couchbase-connector-examples): containing a set of examples showing how to use the [Neo4j - Couchbase Connector](https://github.com/larusba/neo4j-couchbase-connector). 
+
 ## Sources of Inspiration
 
 We'd like to thank the authors of:
