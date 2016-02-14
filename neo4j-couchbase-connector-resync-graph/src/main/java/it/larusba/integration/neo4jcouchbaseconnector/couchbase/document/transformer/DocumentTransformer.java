@@ -20,15 +20,16 @@ package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transf
  * 
  * @author Lorenzo Speranzoni
  * 
- * @see DocumentToCyhperTransformer
+ * @see DocumentToCypherTransformer
  */
 public interface DocumentTransformer<T> {
 	
 	/**
 	 * 
-	 * @param documentKey
-	 * @param jsonDocument
+	 * @param documentKey the Couchbase document ID
+	 * @param documentType the Couchbase document type
+	 * @param jsonDocument the Couchbase document
 	 * @return
 	 */
-	T transform(String documentKey, String jsonDocument);
+	T transform(String documentKey, String documentType, String jsonDocument);
 }

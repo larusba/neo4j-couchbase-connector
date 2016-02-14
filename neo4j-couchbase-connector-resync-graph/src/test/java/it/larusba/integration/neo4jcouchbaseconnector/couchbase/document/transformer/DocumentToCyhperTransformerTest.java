@@ -17,7 +17,7 @@ package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transf
 
 import org.junit.Test;
 
-import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.DocumentToCyhperTransformer;
+import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.DocumentToCypherTransformer;
 import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.DocumentTransformer;
 
 /**
@@ -29,17 +29,17 @@ public class DocumentToCyhperTransformerTest {
 	@Test
 	public void shouldTransformJsonDocumentIntoACypherStatement() {
 
-		DocumentTransformer<String> documentTransformer = new DocumentToCyhperTransformer();
+		DocumentTransformer<String> documentTransformer = new DocumentToCypherTransformer();
 
 		String jsonPersonDocument = "{\"firstname\": \"Lorenzo\", \"lastname\": \"Speranzoni\", \"age\": 41, \"job\": \"CEO @ LARUS Business Automation\"}";
 		
-		System.out.println(documentTransformer.transform("inserpio", jsonPersonDocument));
+		System.out.println(documentTransformer.transform("inserpio", "person", jsonPersonDocument));
 	}
 
 	@Test
 	public void shouldTransformNestedJsonDocumentIntoACypherStatement() {
 		
-		DocumentTransformer<String> documentTransformer = new DocumentToCyhperTransformer();
+		DocumentTransformer<String> documentTransformer = new DocumentToCypherTransformer();
 		
 		String jsonAddressDocument = "{\"street\": \"Via B. Maderna, 7\", \"zipCode\": 30174, \"city\": \"Mestre\", \"province\": \"Venice\", \"country\": \"Italy\"}";
 		
@@ -49,7 +49,7 @@ public class DocumentToCyhperTransformerTest {
 		
 		String jsonPersonDocument = "{\"firstname\": \"Lorenzo\", \"lastname\": \"Speranzoni\", \"age\": 41, \"job\": " + jsonJobDocument + "}";
 		
-		System.out.println(documentTransformer.transform("inserpio", jsonPersonDocument));
+		System.out.println(documentTransformer.transform("inserpio", "person", jsonPersonDocument));
 	}
 	
 }

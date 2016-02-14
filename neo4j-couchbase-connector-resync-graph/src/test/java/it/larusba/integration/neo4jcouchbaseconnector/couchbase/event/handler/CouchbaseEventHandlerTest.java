@@ -47,6 +47,7 @@ public class CouchbaseEventHandlerTest {
 
 		CouchbaseEventDispatcher couchbaseEventHandler = new CouchbaseEventDispatcher(cluster.core(), "default",
 				Arrays.asList("127.0.0.1"), "", new Neo4jWriter());
+		
 		couchbaseEventHandler.start();
 
 		Bucket defaultBucket = cluster.openBucket();

@@ -32,21 +32,15 @@ import com.couchbase.client.java.document.json.JsonObject;
  * @see <a href="http://neo4j.com/blog/cypher-load-json-from-url/">http://neo4j.
  *      com/blog/cypher-load-json-from-url/</a>
  */
-public class DocumentToCyhperTransformer implements DocumentTransformer<String> {
+public class DocumentToCypherTransformer implements DocumentTransformer<String> {
 
 	/**
 	 * @see it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.DocumentTransformer#transform(java.lang.String)
 	 */
 	@Override
-	public String transform(String documentKey, String jsonDocument) {
+	public String transform(String documentKey, String documentType, String jsonDocument) {
 
-		StringBuffer cypher = new StringBuffer();
-
-		cypher.append("WITH {json} AS document\n");
-		cypher.append("UNWIND document AS items\n");
-		cypher.append(transform("inserpio", "inserpio", JsonObject.fromJson(jsonDocument).toMap()));
-
-		return cypher.toString();
+		return transform(documentKey, documentType.toLowerCase(), JsonObject.fromJson(jsonDocument).toMap());
 	}
 
 	/**
@@ -57,26 +51,27 @@ public class DocumentToCyhperTransformer implements DocumentTransformer<String> 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private String transform(String documentKey, String attributeKey, Map<String, Object> attributeMap) {
+	private String transform(String documentKey, String documentType, Map<String, Object> documentMap) {
 
 		StringBuffer rootNode = new StringBuffer();
 		List<String> childNodes = new ArrayList<String>();
 		List<String> childRelationships = new ArrayList<String>();
 
-		rootNode.append("MERGE (").append(attributeKey).append(":").append(StringUtils.capitalize(attributeKey))
+		rootNode.append("MERGE (").append(documentType).append(":").append(StringUtils.capitalize(documentType))
 				.append(" { couchbaseId: '").append(documentKey).append("' })\n");
 
 		boolean firstAttr = true;
 
-		for (String attributeName : attributeMap.keySet()) {
+		for (String attributeName : documentMap.keySet()) {
 
-			Object attributeValue = attributeMap.get(attributeName);
+			Object attributeValue = documentMap.get(attributeName);
 
 			if (attributeValue instanceof Map) {
 
 				childNodes.add(transform(documentKey, (String) attributeName, (Map<String, Object>) attributeValue));
-				childRelationships.add(new StringBuffer().append("MERGE (").append(attributeKey).append(")-[")
-						.append(":").append(attributeKey.toUpperCase()).append("_").append(attributeName.toUpperCase())
+
+				childRelationships.add(new StringBuffer().append("MERGE (").append(documentType).append(")-[")
+						.append(":").append(documentType.toUpperCase()).append("_").append(attributeName.toUpperCase())
 						.append("]->(").append(attributeName).append(")").toString());
 			} else {
 
@@ -87,7 +82,7 @@ public class DocumentToCyhperTransformer implements DocumentTransformer<String> 
 					rootNode.append(", ");
 				}
 
-				rootNode.append(attributeKey).append(".").append(attributeName).append(" = ");
+				rootNode.append(documentType).append(".").append(attributeName).append(" = ");
 
 				if (attributeValue instanceof String) {
 					rootNode.append("'").append(attributeValue).append("'");
@@ -107,10 +102,10 @@ public class DocumentToCyhperTransformer implements DocumentTransformer<String> 
 		}
 
 		for (String childRelationship : childRelationships) {
-			
+
 			cypher.append("\n").append(childRelationship);
 		}
-		
+
 		return cypher.toString();
 	}
 }
