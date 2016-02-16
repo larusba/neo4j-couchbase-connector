@@ -9,6 +9,10 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
+	<modules>
+		<module>spotify</module>
+	</modules>
+
 	<artifactId>neo4j-couchbase-connector-examples</artifactId>
 	<packaging>pom</packaging>
 
@@ -19,7 +23,7 @@
 	<properties>
 		<spring.web.version>4.2.4.RELEASE</spring.web.version>
 	</properties>
-	
+
 	<dependencies>
 
 		<!-- Spring Web -->
@@ -30,5 +34,5 @@
 		</dependency>
 
 	</dependencies>
-	
+
 </project>
