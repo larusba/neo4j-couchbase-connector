@@ -1,0 +1,55 @@
+{
+  "album" : {
+    "album_type" : "album",
+    "available_markets" : [ "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CH", "CL", "CO", "CR", "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT", "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SG", "SI", "SK", "SV", "TR", "TW", "UY" ],
+    "external_urls" : {
+      "spotify" : "https://open.spotify.com/album/7DY6v8qiyQcsTCqUWjH7pS"
+    },
+    "href" : "https://api.spotify.com/v1/albums/7DY6v8qiyQcsTCqUWjH7pS",
+    "id" : "7DY6v8qiyQcsTCqUWjH7pS",
+    "images" : [ {
+      "height" : 640,
+      "url" : "https://i.scdn.co/image/a59a796b7c5e778c1a2ffcc7dda4974f4c53fd83",
+      "width" : 640
+    }, {
+      "height" : 300,
+      "url" : "https://i.scdn.co/image/477593101a951064737c2f60bce9dc1ae226f915",
+      "width" : 300
+    }, {
+      "height" : 64,
+      "url" : "https://i.scdn.co/image/eb740cef5aa3d5e119baf868bdff2dbb5cc1a59b",
+      "width" : 64
+    } ],
+    "name" : "Songs Of Innocence",
+    "type" : "album",
+    "uri" : "spotify:album:7DY6v8qiyQcsTCqUWjH7pS"
+  },
+  "artists" : [ {
+    "external_urls" : {
+      "spotify" : "https://open.spotify.com/artist/51Blml2LZPmy7TTiAg47vQ"
+    },
+    "href" : "https://api.spotify.com/v1/artists/51Blml2LZPmy7TTiAg47vQ",
+    "id" : "51Blml2LZPmy7TTiAg47vQ",
+    "name" : "U2",
+    "type" : "artist",
+    "uri" : "spotify:artist:51Blml2LZPmy7TTiAg47vQ"
+  } ],
+  "available_markets" : [ "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CH", "CL", "CO", "CR", "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT", "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC", "MT", "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO", "SG", "SI", "SK", "SV", "TR", "TW", "UY" ],
+  "disc_number" : 1,
+  "duration_ms" : 255382,
+  "explicit" : false,
+  "external_ids" : {
+    "isrc" : "GBUM71404672"
+  },
+  "external_urls" : {
+    "spotify" : "https://open.spotify.com/track/6jmSfC1hec2DydM6e364o1"
+  },
+  "href" : "https://api.spotify.com/v1/tracks/6jmSfC1hec2DydM6e364o1",
+  "id" : "6jmSfC1hec2DydM6e364o1",
+  "name" : "The Miracle (Of Joey Ramone)",
+  "popularity" : 52,
+  "preview_url" : "https://p.scdn.co/mp3-preview/79f62e5391ac8ee464a0e12002edc20166ae3033",
+  "track_number" : 1,
+  "type" : "track",
+  "uri" : "spotify:track:6jmSfC1hec2DydM6e364o1"
+}
