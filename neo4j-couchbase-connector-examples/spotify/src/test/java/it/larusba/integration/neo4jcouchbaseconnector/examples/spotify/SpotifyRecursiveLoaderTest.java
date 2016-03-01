@@ -38,33 +38,31 @@ public class SpotifyRecursiveLoaderTest {
 		JsonDocument albumsDocument = JsonDocument.create(albumsId, albumsObject);
 		bucket.upsert(albumsDocument);
 		JsonArray albums = albumsObject.getArray("items");
-		Object albumObj = albums.get(0);
-		// for (Object albumObj : albums) {
-		JsonObject item = (JsonObject) albumObj;
-		String itemHref = item.getString("href");
-		System.out.println("Getting the album...");
-		String albumJson = this.restTemplate.getForObject(itemHref, String.class);
-		System.out.println("Got the album...");
-		docs++;
-		JsonObject albumObject = JsonObject.fromJson(albumJson);
-		String albumId = albumObject.getString("id");
-		JsonDocument albumDocument = JsonDocument.create(albumId, albumObject);
-		bucket.upsert(albumDocument);
-		JsonArray tracks = albumObject.getObject("tracks").getArray("items");
-		Object trackObj = tracks.get(0);
-		// for (Object trackObj : tracks) {
-		JsonObject track = (JsonObject) trackObj;
-		String trackHref = track.getString("href");
-		System.out.println("Getting the track...");
-		String trackJson = this.restTemplate.getForObject(trackHref, String.class);
-		System.out.println("Got the track...");
-		docs++;
-		JsonObject trackObject = JsonObject.fromJson(trackJson);
-		String trackId = trackObject.getString("id");
-		JsonDocument trackDocument = JsonDocument.create(trackId, trackObject);
-		bucket.upsert(trackDocument);
-		// }
-		// }
+		for (Object albumObj : albums) {
+			JsonObject item = (JsonObject) albumObj;
+			String itemHref = item.getString("href");
+			System.out.println("Getting the album...");
+			String albumJson = this.restTemplate.getForObject(itemHref, String.class);
+			System.out.println("Got the album...");
+			docs++;
+			JsonObject albumObject = JsonObject.fromJson(albumJson);
+			String albumId = albumObject.getString("id");
+			JsonDocument albumDocument = JsonDocument.create(albumId, albumObject);
+			bucket.upsert(albumDocument);
+			JsonArray tracks = albumObject.getObject("tracks").getArray("items");
+			for (Object trackObj : tracks) {
+				JsonObject track = (JsonObject) trackObj;
+				String trackHref = track.getString("href");
+				System.out.println("Getting the track...");
+				String trackJson = this.restTemplate.getForObject(trackHref, String.class);
+				System.out.println("Got the track...");
+				docs++;
+				JsonObject trackObject = JsonObject.fromJson(trackJson);
+				String trackId = trackObject.getString("id");
+				JsonDocument trackDocument = JsonDocument.create(trackId, trackObject);
+				bucket.upsert(trackDocument);
+			}
+		}
 		System.out.println("Total documents " + docs);
 	}
 }
