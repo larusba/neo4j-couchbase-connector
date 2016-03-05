@@ -12,13 +12,13 @@
 	<description>A project that builds a communication API between Neo4j and Couchbase</description>
 	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
 
-	<licenses>
-		<license>
-			<name>GNU General Public License, version 3</name>
-			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+<licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
 	<organization>
 		<name>LARUS Business Automation Srl</name>
