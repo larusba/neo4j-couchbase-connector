@@ -16,4 +16,24 @@
 	<description>A project that builds a communication API between Neo4j and Couchbase. This module is responsible for resynching Neo4j every time a Couchbase document is updated.</description>
 	<url>http://neo4j.larus-ba.it/en/site/neo4-couchbase-connector.html</url>
 
+	<properties>
+		<spring.web.version>4.2.4.RELEASE</spring.web.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20151123</version>
+		</dependency>
+
+	</dependencies>
+
 </project>

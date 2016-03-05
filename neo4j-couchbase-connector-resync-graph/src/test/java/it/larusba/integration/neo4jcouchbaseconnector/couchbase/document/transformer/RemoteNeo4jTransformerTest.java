@@ -17,29 +17,29 @@ package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transf
 
 import org.junit.Test;
 
-import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.DocumentToCypherTransformer;
-import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.DocumentTransformer;
-
 /**
+ * 
+ * @author Mauro Roiter
  *
- * @author Lorenzo Speranzoni
  */
-public class DocumentToCyhperTransformerTest {
+public class RemoteNeo4jTransformerTest {
 
 	@Test
-	public void shouldTransformJsonDocumentIntoACypherStatement() {
-
-		DocumentTransformer<String> documentTransformer = new DocumentToCypherTransformer();
-
-		String jsonPersonDocument = "{\"firstname\": \"Lorenzo\", \"lastname\": \"Speranzoni\", \"age\": 41, \"job\": \"CEO @ LARUS Business Automation\"}";
+	public void shouldRemoteTransformJson2CypherTest() {
 		
-		System.out.println(documentTransformer.transform("inserpio", "person", jsonPersonDocument));
+		DocumentTransformer<String> remoteNeo4jTransformer = new RemoteNeo4jTransformer();
+		
+		String jsonToConvert = "{\"firstname\": \"Lorenzo\", \"lastname\": \"Speranzoni\", \"age\": 41, \"job\": \"CEO @ LARUS Business Automation\"}";
+		
+		String transformerResponse = remoteNeo4jTransformer.transform(null, "person", jsonToConvert);
+		
+		System.out.println(transformerResponse);
 	}
-
+	
 	@Test
-	public void shouldTransformNestedJsonDocumentIntoACypherStatement() {
+	public void shouldTransformNestedJson2CypherTest() {
 		
-		DocumentTransformer<String> documentTransformer = new DocumentToCypherTransformer();
+		DocumentTransformer<String> remoteNeo4jTransformer = new RemoteNeo4jTransformer();
 		
 		String jsonAddressDocument = "{\"street\": \"Via B. Maderna, 7\", \"zipCode\": 30174, \"city\": \"Mestre\", \"province\": \"Venice\", \"country\": \"Italy\"}";
 		
@@ -49,7 +49,9 @@ public class DocumentToCyhperTransformerTest {
 		
 		String jsonPersonDocument = "{\"firstname\": \"Lorenzo\", \"lastname\": \"Speranzoni\", \"age\": 41, \"job\": " + jsonJobDocument + "}";
 		
-		System.out.println(documentTransformer.transform("inserpio", "person", jsonPersonDocument));
+		String trasnsformerResponese = remoteNeo4jTransformer.transform(null, "person", jsonPersonDocument);
+		
+		System.out.println(trasnsformerResponese);
+		
 	}
-	
 }
