@@ -18,10 +18,16 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.examples.spotify;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
-import org.springframework.web.client.RestTemplate;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
@@ -34,8 +40,6 @@ import com.couchbase.client.java.document.json.JsonObject;
  * @author Riccardo Birello
  */
 public class SpotifyRecursiveLoaderTest {
-
-	private RestTemplate restTemplate = new RestTemplate();
 
 	@Test
 	public void test() throws IOException {
@@ -50,7 +54,7 @@ public class SpotifyRecursiveLoaderTest {
 		String artistId = "51Blml2LZPmy7TTiAg47vQ";
 		String albumsUrl = "https://api.spotify.com/v1/artists/" + artistId + "/albums";
 		System.out.println("Getting the artist's albums...");
-		String albumsJson = this.restTemplate.getForObject(albumsUrl, String.class);
+		String albumsJson = this.getRequest(albumsUrl);
 		System.out.println("Got the artist's albums...");
 		docs++;
 		JsonObject albumsObject = JsonObject.fromJson(albumsJson);
@@ -63,7 +67,7 @@ public class SpotifyRecursiveLoaderTest {
 			JsonObject item = (JsonObject) albumObj;
 			String itemHref = item.getString("href");
 			System.out.println("Getting the album...");
-			String albumJson = this.restTemplate.getForObject(itemHref, String.class);
+			String albumJson = this.getRequest(itemHref);
 			System.out.println("Got the album...");
 			docs++;
 			JsonObject albumObject = JsonObject.fromJson(albumJson);
@@ -75,7 +79,7 @@ public class SpotifyRecursiveLoaderTest {
 				JsonObject track = (JsonObject) trackObj;
 				String trackHref = track.getString("href");
 				System.out.println("Getting the track...");
-				String trackJson = this.restTemplate.getForObject(trackHref, String.class);
+				String trackJson = this.getRequest(trackHref);
 				System.out.println("Got the track...");
 				docs++;
 				JsonObject trackObject = JsonObject.fromJson(trackJson);
@@ -85,5 +89,26 @@ public class SpotifyRecursiveLoaderTest {
 			}
 		}
 		System.out.println("Total documents " + docs);
+	}
+	
+	
+	private String getRequest(String uri) throws ClientProtocolException, IOException {
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpGet getRequest = new HttpGet(uri);
+		HttpResponse response = httpClient.execute(getRequest);
+		
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+		StringBuffer jsonResult = new StringBuffer();
+		String line = "";
+		
+		while ((line = rd.readLine()) != null) {
+			jsonResult.append(line);
+		}
+		
+		return jsonResult.toString();
 	}
 }

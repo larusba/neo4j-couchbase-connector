@@ -18,7 +18,17 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.examples.spotify.service.impl;
 
-import org.springframework.web.client.RestTemplate;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.larusba.integration.neo4jcouchbaseconnector.examples.spotify.service.SpotifyLoaderService;
 
@@ -31,20 +41,32 @@ import it.larusba.integration.neo4jcouchbaseconnector.examples.spotify.service.S
  */
 public class SpotifyLoaderServiceImpl implements SpotifyLoaderService
 {
-	public RestTemplate restTemplate = new RestTemplate();
+	private static Logger LOGGER = LoggerFactory.getLogger(SpotifyLoaderServiceImpl.class);
 	
 	@Override
 	public String getArtist(String artistId) 
 	{
-		String jsonResult = restTemplate.getForObject("https://api.spotify.com/v1/artists/"+artistId, String.class);
+		String jsonResult = "";
 		
-		return jsonResult;
+		try {
+			jsonResult = getRequest("https://api.spotify.com/v1/artists/"+artistId);
+		} catch (IOException e) {
+			LOGGER.error("Error while getting the Artist: " + e.getMessage());
+		}
+
+		return jsonResult.toString();
 	}
 	
 	@Override
 	public String getAlbums(String artistId) 
 	{
-		String jsonResult = restTemplate.getForObject("https://api.spotify.com/v1/artists/"+artistId+"/albums", String.class);
+		String jsonResult = "";
+		
+		try {
+			jsonResult = getRequest("https://api.spotify.com/v1/artists/"+artistId+"/albums");
+		} catch (IOException e) {
+			LOGGER.error("Error while getting albums: " + e.getMessage());
+		}
 		
 		return jsonResult;
 	}
@@ -52,8 +74,34 @@ public class SpotifyLoaderServiceImpl implements SpotifyLoaderService
 	@Override
 	public String getRelatedArtists(String artistId)
 	{
-		String jsonResult = restTemplate.getForObject("https://api.spotify.com/v1/artists/"+artistId+"/related-artists", String.class);
+		String jsonResult = "";
+		
+		try {
+			jsonResult = getRequest("https://api.spotify.com/v1/artists/"+artistId+"/related-artists");
+		} catch (IOException e) {
+			LOGGER.error("Error while getting related artists: " + e.getMessage());
+		}
 		
 		return jsonResult;
+	}
+	
+	private String getRequest(String uri) throws ClientProtocolException, IOException {
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpGet getRequest = new HttpGet(uri);
+		HttpResponse response = httpClient.execute(getRequest);
+		
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+		StringBuffer jsonResult = new StringBuffer();
+		String line = "";
+		
+		while ((line = rd.readLine()) != null) {
+			jsonResult.append(line);
+		}
+		
+		return jsonResult.toString();
 	}
 }

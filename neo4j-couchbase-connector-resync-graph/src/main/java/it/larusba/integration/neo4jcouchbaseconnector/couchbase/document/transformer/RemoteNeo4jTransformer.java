@@ -31,6 +31,8 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.bean.JsonDocument;
 
@@ -41,6 +43,8 @@ import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transfo
  * @author Mauro Roiter
  */
 public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(RemoteNeo4jTransformer.class);
 	
 	private InputStream inputStream;
 	
@@ -55,7 +59,7 @@ public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
 		} catch (IOException e) {
 			
 			returnMessage = "Error during JSON transformation";
-			e.printStackTrace();
+			LOGGER.error("Error during JSON transformation: " + e.getMessage());
 		}
 		
 		return returnMessage;
