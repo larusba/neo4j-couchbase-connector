@@ -18,15 +18,17 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.ResourceIterator;
+import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.test.TestGraphDatabaseFactory;
-
-import it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler.CouchbaseWriter;
 
 /**
  * This test class registers a {@link TransactionEventHandler} that prints all
@@ -57,6 +59,33 @@ public class Neo4jEventHandlerTest {
 			vanGogh.setProperty("secondName", "Willem");
 			vanGogh.setProperty("lastName", "Van Gogh");
 
+			tx.success();
+		}
+	}
+	
+	@Test
+	@Ignore
+	public void shouldTransformCypherToJSONDoc() {
+		
+		String cypherStatement = "MERGE (person:Person { couchbaseId: 'documentKey' }) "
+							   + "ON CREATE SET person.firstname = 'Lorenzo', "
+							   + "person.lastname = 'Speranzoni', "
+							   + "person.age = 41, "
+							   + "person.job = 'CEO @ LARUS Business Automation'"
+							   + "RETURN person";
+		
+		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
+
+		database.registerTransactionEventHandler(new CouchbaseWriter());
+
+		try (Transaction tx = database.beginTx()) {
+
+//			Result result = database.execute(cypherStatement);
+			database.execute(cypherStatement);
+//			ResourceIterator<Node> resourceIterator = result.columnAs("person");
+//			
+//			Node createdNode = resourceIterator.next();
+			
 			tx.success();
 		}
 	}

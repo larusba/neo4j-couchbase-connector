@@ -18,6 +18,11 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
@@ -25,6 +30,12 @@ import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.CouchbaseCluster;
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
 
 /**
  * This class is responsible for filtering and routing events to the Couchbase
@@ -50,6 +61,23 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	public Void beforeCommit(TransactionData data) throws Exception {
 		LOGGER.debug("Transaction is about to be committed.");
 		printTransactionData(data);
+		
+		List<JsonDocument> jsonDocument = buildJSONDocument(data);
+		
+		// Connect to localhost
+		Cluster cluster = CouchbaseCluster.create();
+		
+		// Open the default bucket 
+		Bucket defaultBucket = cluster.openBucket();
+
+		for (JsonDocument document : jsonDocument) {
+			
+			defaultBucket.upsert(document);
+		}
+		
+
+		// Disconnect and clear all allocated resources
+		cluster.disconnect();
 		return null;
 	}
 
@@ -60,6 +88,7 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	public void afterCommit(TransactionData data, Void state) {
 		LOGGER.debug("Transaction has been committed successfully.");
 		printTransactionData(data);
+		buildJSONDocument(data);
 	}
 
 	/**
@@ -106,5 +135,43 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 		for (PropertyEntry<Node> assignedNodeProperty : assignedNodeProperties) {
 			LOGGER.debug(assignedNodeProperty.key() + ": " + assignedNodeProperty.value());
 		}
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * 			  the data that has changed during the course of one transaction
+	 */
+	public List<JsonDocument> buildJSONDocument(TransactionData data) {
+		LOGGER.debug("Starting transofrm data from Cypher to JSON...");
+				
+		List<JsonObject> jsonObjectsCreated = new ArrayList<JsonObject>();
+		List<JsonDocument> jsonDocuments = new ArrayList<JsonDocument>();
+		
+		Iterable<Node> createdNodes = data.createdNodes();
+		
+		for (Node node : createdNodes) {
+			
+			JsonObject jsonCouchbase = JsonObject.empty();
+			
+			Map<String, Object> allProperties = node.getAllProperties();
+			
+			LOGGER.trace("Node properties...");
+			for (String property : allProperties.keySet()) {
+				
+				LOGGER.trace("* " + property + ", " + allProperties.get(property));
+				jsonCouchbase.put(property, allProperties.get(property));
+			}
+			
+			Label label = node.getLabels().iterator().next();
+			
+			jsonObjectsCreated.add(jsonCouchbase);
+			JsonDocument jsonDocument = JsonDocument.create(label.name(), jsonCouchbase);
+			jsonDocuments.add(jsonDocument);
+		}
+		
+
+		return jsonDocuments;
+		
 	}
 }
