@@ -18,11 +18,8 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
@@ -35,7 +32,8 @@ import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonObject;
+
+import it.larusba.integration.neo4jcouchbaseconnector.neo4j.transformer.Neo4jToCouchbaseTransformer;
 
 /**
  * This class is responsible for filtering and routing events to the Couchbase
@@ -60,7 +58,7 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 */
 	public Void beforeCommit(TransactionData data) throws Exception {
 		LOGGER.debug("Transaction is about to be committed.");
-		printTransactionData(data);
+//		printTransactionData(data);
 		
 		List<JsonDocument> jsonDocument = buildJSONDocument(data);
 		
@@ -87,7 +85,7 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 */
 	public void afterCommit(TransactionData data, Void state) {
 		LOGGER.debug("Transaction has been committed successfully.");
-		printTransactionData(data);
+//		printTransactionData(data);
 		buildJSONDocument(data);
 	}
 
@@ -143,35 +141,13 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	 * 			  the data that has changed during the course of one transaction
 	 */
 	public List<JsonDocument> buildJSONDocument(TransactionData data) {
+
 		LOGGER.debug("Starting transofrm data from Cypher to JSON...");
 				
-		List<JsonObject> jsonObjectsCreated = new ArrayList<JsonObject>();
-		List<JsonDocument> jsonDocuments = new ArrayList<JsonDocument>();
+		Neo4jToCouchbaseTransformer transformer = new Neo4jToCouchbaseTransformer();
 		
-		Iterable<Node> createdNodes = data.createdNodes();
+		transformer.transform(data);
 		
-		for (Node node : createdNodes) {
-			
-			JsonObject jsonCouchbase = JsonObject.empty();
-			
-			Map<String, Object> allProperties = node.getAllProperties();
-			
-			LOGGER.trace("Node properties...");
-			for (String property : allProperties.keySet()) {
-				
-				LOGGER.trace("* " + property + ", " + allProperties.get(property));
-				jsonCouchbase.put(property, allProperties.get(property));
-			}
-			
-			Label label = node.getLabels().iterator().next();
-			
-			jsonObjectsCreated.add(jsonCouchbase);
-			JsonDocument jsonDocument = JsonDocument.create(label.name(), jsonCouchbase);
-			jsonDocuments.add(jsonDocument);
-		}
-		
-
-		return jsonDocuments;
-		
+		return null;
 	}
 }

@@ -18,14 +18,14 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
+import java.sql.SQLException;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.ResourceIterator;
-import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.test.TestGraphDatabaseFactory;
@@ -65,17 +65,20 @@ public class Neo4jEventHandlerTest {
 	
 	@Test
 	@Ignore
-	public void shouldTransformCypherToJSONDoc() {
+	public void shouldTransformCypherToJSONDoc() throws SQLException {
 		
 		String cypherStatement = "MERGE (person:Person { couchbaseId: 'documentKey' }) "
-							   + "ON CREATE SET person.firstname = 'Lorenzo', "
+							   /*+ "ON CREATE SET person.firstname = 'Lorenzo', "*/
+							   + "SET person.firstname = 'Lorenzo', "
+							   + "person.birthdate = '01/04/1974', "
 							   + "person.lastname = 'Speranzoni', "
 							   + "person.age = 41, "
 							   + "person.job = 'CEO @ LARUS Business Automation'"
 							   + "RETURN person";
 		
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
-
+//		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
+		
 		database.registerTransactionEventHandler(new CouchbaseWriter());
 
 		try (Transaction tx = database.beginTx()) {
