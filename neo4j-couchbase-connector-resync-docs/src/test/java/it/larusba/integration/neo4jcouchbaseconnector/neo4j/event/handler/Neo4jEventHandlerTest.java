@@ -20,6 +20,7 @@ package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
 import java.sql.SQLException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -63,7 +64,7 @@ public class Neo4jEventHandlerTest {
 	}
 	
 	@Test
-//	@Ignore
+	@Ignore
 	public void shouldTransformCypherToJSONDoc() throws SQLException {
 		
 		String cypherStatement = "MERGE (person:Person { couchbaseId: 'documentKey' }) "
