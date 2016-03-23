@@ -20,7 +20,6 @@ package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
 import java.sql.SQLException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -64,17 +63,29 @@ public class Neo4jEventHandlerTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void shouldTransformCypherToJSONDoc() throws SQLException {
 		
 		String cypherStatement = "MERGE (person:Person { couchbaseId: 'documentKey' }) "
-							   /*+ "ON CREATE SET person.firstname = 'Lorenzo', "*/
 							   + "SET person.firstname = 'Lorenzo', "
 							   + "person.birthdate = '01/04/1974', "
 							   + "person.lastname = 'Speranzoni', "
 							   + "person.age = 41, "
 							   + "person.job = 'CEO @ LARUS Business Automation'"
 							   + "RETURN person";
+		
+		String cypherStatement2 = "MERGE (person:Person { couchbaseId: 'documentKey2' }) "
+				   + "SET person.firstname = 'Mauro', "
+				   + "person.birthdate = '19/09/1986', "
+				   + "person.lastname = 'Roiter', "
+				   + "person.age = 29, "
+				   + "person.job = 'Developer @ LARUS Business Automation'"
+				   + "RETURN person";
+		
+		String cypherStatement3 = "MATCH (a:Person),(b:Person) "
+		+ "WHERE a.firstname = 'Mauro' AND b.firstname = 'Lorenzo' "
+		+ "CREATE (a)-[r:COLLEAGUE { couchbaseId : 'documentkey3' }]->(b) "
+		+ "RETURN r";
 		
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 //		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
@@ -85,6 +96,8 @@ public class Neo4jEventHandlerTest {
 
 //			Result result = database.execute(cypherStatement);
 			database.execute(cypherStatement);
+			database.execute(cypherStatement2);
+			database.execute(cypherStatement3);
 //			ResourceIterator<Node> resourceIterator = result.columnAs("person");
 //			
 //			Node createdNode = resourceIterator.next();
