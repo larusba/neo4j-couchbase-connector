@@ -16,21 +16,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.larusba.integration.neo4jcouchbaseconnector.couchbase.event.dispatcher;
-
-import com.couchbase.client.deps.com.lmax.disruptor.EventFactory;
+package it.larusba.integration.couchbase.document.bean;
 
 /**
- * Factory class for {@link CouchbaseEvent}s.
- *
- * @author Lorenzo Speranzoni
- * 
- * @see EventFactory
- */
-public class CouchbaseEventFactory implements EventFactory<CouchbaseEvent> {
+*
+* @author Mauro Roiter
+*/
+public class JsonDocument {
+
+	private String content;
+	private String type;
 	
-    @Override
-    public CouchbaseEvent newInstance() {
-        return new CouchbaseEvent();
-    }
+	public JsonDocument() {
+	}
+	
+	public JsonDocument(String content, String type) {
+		this.content = content;
+		this.type = type;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }
+

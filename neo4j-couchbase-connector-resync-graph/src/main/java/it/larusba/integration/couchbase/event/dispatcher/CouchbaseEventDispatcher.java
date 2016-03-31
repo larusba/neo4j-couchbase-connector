@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.larusba.integration.neo4jcouchbaseconnector.couchbase.event.dispatcher;
+package it.larusba.integration.couchbase.event.dispatcher;
 
 import java.util.ArrayList;
 import java.util.List;

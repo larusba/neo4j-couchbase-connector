@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer;
+package it.larusba.integration.couchbase.document.transformer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,43 +34,45 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer.bean.JsonDocument;
+import it.larusba.integration.couchbase.document.bean.JsonDocument;
 
 /**
- * {@link DocumentTransformer} a REST call to a Neo4j Server Extension which is responsible
- * for the conversion of a JSON string to a Cypher statement
+ * {@link DocumentTransformer} a REST call to a Neo4j Server Extension which is
+ * responsible for the conversion of a JSON string to a Cypher statement
  * 
  * @author Mauro Roiter
  */
 public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
-	
+
 	private static Logger LOGGER = LoggerFactory.getLogger(RemoteNeo4jTransformer.class);
-	
+
 	private InputStream inputStream;
-	
+
 	@Override
 	public String transform(String documentKey, String documentType, String jsonDocument) {
 
 		String returnMessage = "JSON successfully transformed";
-		
+
 		try {
-			
+
 			transformJson2Cypher(documentType, jsonDocument);
 		} catch (IOException e) {
-			
+
 			returnMessage = "Error during JSON transformation";
 			LOGGER.error("Error during JSON transformation: " + e.getMessage());
 		}
-		
+
 		return returnMessage;
 	}
-	
+
 	/**
-	 * It perform the REST call to the URL configured in the transofrmer.properties file
-	 * @throws IOException 
+	 * It perform the REST call to the URL configured in the
+	 * transofrmer.properties file
+	 * 
+	 * @throws IOException
 	 */
-	private void transformJson2Cypher(String documentType, String jsonDocument) throws IOException{
-		
+	private void transformJson2Cypher(String documentType, String jsonDocument) throws IOException {
+
 		Properties prop = new Properties();
 		String propFileName = "transformer.properties";
 
@@ -84,25 +86,25 @@ public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
 
 		// get the URL property value
 		String urlJson2Cypher = prop.getProperty("transformer.url");
-		
+
 		JsonDocument documentToTransform = new JsonDocument(jsonDocument, documentType);
-		
+
 		HttpClient httpClient = HttpClientBuilder.create().build();
-		
+
 		HttpPut putRequest = new HttpPut(urlJson2Cypher);
 		putRequest.addHeader("content-type", MediaType.APPLICATION_JSON);
 
 		JSONObject json = new JSONObject(documentToTransform);
-		
+
 		StringEntity entity = new StringEntity(json.toString());
-		
+
 		putRequest.setEntity(entity);
-		
+
 		HttpResponse response = httpClient.execute(putRequest);
-		
+
 		if (response.getStatusLine().getStatusCode() != 200) {
-			
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-        }
+
+			throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+		}
 	}
 }

@@ -20,6 +20,9 @@ package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transf
 
 import org.junit.Test;
 
+import it.larusba.integration.couchbase.document.transformer.DocumentTransformer;
+import it.larusba.integration.couchbase.document.transformer.RemoteNeo4jTransformer;
+
 /**
  * 
  * @author Mauro Roiter

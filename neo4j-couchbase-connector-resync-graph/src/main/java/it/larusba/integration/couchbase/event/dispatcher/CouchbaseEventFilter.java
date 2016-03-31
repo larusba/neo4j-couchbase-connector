@@ -16,23 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer;
+package it.larusba.integration.couchbase.event.dispatcher;
+
+import com.couchbase.client.core.message.dcp.MutationMessage;
+import com.couchbase.client.core.message.dcp.RemoveMessage;
 
 /**
- * Tranformer for Couchbase Document.
- * 
+ * If applied, this filter allows only {@link MutationMessage}s and
+ * {@link RemoveMessage} to be considered by the {@link EventHandler}.
+ *
  * @author Lorenzo Speranzoni
- * 
- * @see DocumentToCypherTransformer
  */
-public interface DocumentTransformer<T> {
-	
+public class CouchbaseEventFilter {
+
 	/**
-	 * 
-	 * @param documentKey the Couchbase document ID
-	 * @param documentType the Couchbase document type
-	 * @param jsonDocument the Couchbase document
-	 * @return
+	 * Returns true if event is a {@link MutationMessage}s and
+	 * {@link RemoveMessage}.
+	 *
+	 * @param couchbaseEvent
+	 *            event object from Couchbase.
+	 * @return true if event is a mutation.
 	 */
-	T transform(String documentKey, String documentType, String jsonDocument);
+	public static boolean accept(final CouchbaseEvent couchbaseEvent) {
+		return couchbaseEvent.getMessage() instanceof MutationMessage
+				|| couchbaseEvent.getMessage() instanceof RemoveMessage;
+	}
 }

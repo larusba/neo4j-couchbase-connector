@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.larusba.integration.neo4jcouchbaseconnector.couchbase.event.dispatcher;
+package it.larusba.integration.couchbase.event.dispatcher;
 
 import com.couchbase.client.core.message.CouchbaseMessage;
 import com.couchbase.client.deps.com.lmax.disruptor.EventTranslatorOneArg;
