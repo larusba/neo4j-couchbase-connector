@@ -32,7 +32,7 @@ import org.neo4j.test.TestGraphDatabaseFactory;
 /**
  * This test class registers a {@link TransactionEventHandler} that prints all
  * the events that has happened in each transaction through the
- * {@link CouchbaseWriter} implementation and creates a
+ * {@link Neo4jEventListener} implementation and creates a
  * {@link Node} with <code>Artist</code> {@link Label} and three properties
  * <code>firstName</code>, <code>secondName>/code> and <code>lastName</code>.
  * <p/>
@@ -48,7 +48,7 @@ public class Neo4jEventHandlerTest {
 
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 
-		database.registerTransactionEventHandler(new CouchbaseWriter(database));
+		database.registerTransactionEventHandler(new Neo4jEventListener(database));
 
 		try (Transaction tx = database.beginTx()) {
 
@@ -89,7 +89,7 @@ public class Neo4jEventHandlerTest {
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 //		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
 		
-		database.registerTransactionEventHandler(new CouchbaseWriter(database));
+		database.registerTransactionEventHandler(new Neo4jEventListener(database));
 
 		try (Transaction tx = database.beginTx()) {
 

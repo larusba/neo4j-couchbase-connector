@@ -47,12 +47,12 @@ import it.larusba.integration.neo4jcouchbaseconnector.neo4j.transformer.Neo4jToC
  * 
  * @see TransactionEventHandler, TransactionData
  */
-public class CouchbaseWriter implements TransactionEventHandler<Void> {
+public class Neo4jEventListener implements TransactionEventHandler<Void> {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(CouchbaseWriter.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(Neo4jEventListener.class);
 	private GraphDatabaseService db;
 	
-	public CouchbaseWriter(GraphDatabaseService db) {
+	public Neo4jEventListener(GraphDatabaseService db) {
 
 		this.db = db;
 	}
