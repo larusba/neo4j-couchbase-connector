@@ -20,7 +20,6 @@ package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
 import java.sql.SQLException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -49,7 +48,7 @@ public class Neo4jEventHandlerTest {
 
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 
-		database.registerTransactionEventHandler(new CouchbaseWriter());
+		database.registerTransactionEventHandler(new CouchbaseWriter(database));
 
 		try (Transaction tx = database.beginTx()) {
 
@@ -64,19 +63,18 @@ public class Neo4jEventHandlerTest {
 	}
 	
 	@Test
-	@Ignore
 	public void shouldTransformCypherToJSONDoc() throws SQLException {
 		
-		String cypherStatement = "MERGE (person:Person { couchbaseId: 'documentKey' }) "
-							   + "SET person.firstname = 'Lorenzo', "
+		String cypherStatement = "MERGE (person:Person { firstname: 'Lorenzo' }) "
+							   + "SET person.couchbaseId = 'documentKey', "
 							   + "person.birthdate = '01/04/1974', "
 							   + "person.lastname = 'Speranzoni', "
 							   + "person.age = 41, "
 							   + "person.job = 'CEO @ LARUS Business Automation'"
 							   + "RETURN person";
 		
-		String cypherStatement2 = "MERGE (person:Person { couchbaseId: 'documentKey2' }) "
-				   + "SET person.firstname = 'Mauro', "
+		String cypherStatement2 = "MERGE (person:Person { firstname: 'Mauro' }) "
+				   + "SET person.couchbaseId = 'documentKey2', "
 				   + "person.birthdate = '19/09/1986', "
 				   + "person.lastname = 'Roiter', "
 				   + "person.age = 29, "
@@ -84,24 +82,20 @@ public class Neo4jEventHandlerTest {
 				   + "RETURN person";
 		
 		String cypherStatement3 = "MATCH (a:Person),(b:Person) "
-		+ "WHERE a.firstname = 'Mauro' AND b.firstname = 'Lorenzo' "
-		+ "CREATE (a)-[r:COLLEAGUE { couchbaseId : 'documentkey3' }]->(b) "
+		+ "WHERE a.firstname = 'Lorenzo' AND b.firstname = 'Mauro' "
+		+ "MERGE (a)-[r:COLLEAGUE { couchbaseId : 'documentKey' }]->(b) "
 		+ "RETURN r";
 		
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 //		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
 		
-		database.registerTransactionEventHandler(new CouchbaseWriter());
+		database.registerTransactionEventHandler(new CouchbaseWriter(database));
 
 		try (Transaction tx = database.beginTx()) {
 
-//			Result result = database.execute(cypherStatement);
 			database.execute(cypherStatement);
 			database.execute(cypherStatement2);
 			database.execute(cypherStatement3);
-//			ResourceIterator<Node> resourceIterator = result.columnAs("person");
-//			
-//			Node createdNode = resourceIterator.next();
 			
 			tx.success();
 		}

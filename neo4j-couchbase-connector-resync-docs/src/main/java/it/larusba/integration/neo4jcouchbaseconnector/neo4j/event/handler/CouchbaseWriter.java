@@ -20,6 +20,7 @@ package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
 import java.util.List;
 
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
@@ -28,9 +29,6 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.Cluster;
-import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 
 import it.larusba.integration.neo4jcouchbaseconnector.neo4j.transformer.Neo4jToCouchbaseTransformer;
@@ -52,6 +50,12 @@ import it.larusba.integration.neo4jcouchbaseconnector.neo4j.transformer.Neo4jToC
 public class CouchbaseWriter implements TransactionEventHandler<Void> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(CouchbaseWriter.class);
+	private GraphDatabaseService db;
+	
+	public CouchbaseWriter(GraphDatabaseService db) {
+
+		this.db = db;
+	}
 	
 	/**
 	 * @see org.neo4j.graphdb.event.TransactionEventHandler#beforeCommit(org.neo4j.graphdb.event.TransactionData)
@@ -59,23 +63,6 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 	public Void beforeCommit(TransactionData data) throws Exception {
 		LOGGER.debug("Transaction is about to be committed.");
 //		printTransactionData(data);
-		
-		List<JsonDocument> jsonDocument = buildJSONDocument(data);
-		
-		// Connect to localhost
-		Cluster cluster = CouchbaseCluster.create();
-		
-		// Open the default bucket 
-		Bucket defaultBucket = cluster.openBucket();
-
-		for (JsonDocument document : jsonDocument) {
-			
-			defaultBucket.upsert(document);
-		}
-		
-
-		// Disconnect and clear all allocated resources
-		cluster.disconnect();
 		return null;
 	}
 
@@ -87,6 +74,27 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 		LOGGER.debug("Transaction has been committed successfully.");
 //		printTransactionData(data);
 		buildJSONDocument(data);
+		
+		/*List<JsonDocument> jsonDocument = buildJSONDocument(data);
+		
+		if (jsonDocument != null)
+		{			
+			// Connect to localhost
+			Cluster cluster = CouchbaseCluster.create();
+			
+			// Open the default bucket 
+			Bucket defaultBucket = cluster.openBucket();
+			
+			
+			for (JsonDocument document : jsonDocument) {
+				
+				defaultBucket.upsert(document);
+			}
+			
+			
+			// Disconnect and clear all allocated resources
+			cluster.disconnect();
+		}*/
 	}
 
 	/**
@@ -146,7 +154,7 @@ public class CouchbaseWriter implements TransactionEventHandler<Void> {
 				
 		Neo4jToCouchbaseTransformer transformer = new Neo4jToCouchbaseTransformer();
 		
-		transformer.transform(data);
+		transformer.transform(data, this.db);
 		
 		return null;
 	}
