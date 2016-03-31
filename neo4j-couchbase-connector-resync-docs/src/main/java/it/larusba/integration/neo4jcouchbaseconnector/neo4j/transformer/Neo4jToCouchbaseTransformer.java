@@ -19,11 +19,15 @@
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.transformer;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Result;
+import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
@@ -43,7 +47,7 @@ public class Neo4jToCouchbaseTransformer {
 	
 	private static final String COUCHBASE_ID_PROPERTY_KEY = "couchbaseId";
 	
-	public void transform(TransactionData data) {
+	public void transform(TransactionData data, GraphDatabaseService db) {
 		
 		Set<Object> setCouchbaseIds = new HashSet<Object>();
 		
@@ -51,7 +55,7 @@ public class Neo4jToCouchbaseTransformer {
 		
 		for (Node node : createdNodes) {
 			
-			extractPropertyFromNode(setCouchbaseIds, node);
+			extractPropertyFromNode(setCouchbaseIds, node, db);
 		}
 		
 		Iterable<PropertyEntry<Node>> assignedNodeProperties = data.assignedNodeProperties();
@@ -60,7 +64,7 @@ public class Neo4jToCouchbaseTransformer {
 			
 			Node nodeWithAssignedProperties = propertyEntry.entity();
 			
-			extractPropertyFromNode(setCouchbaseIds, nodeWithAssignedProperties);
+			extractPropertyFromNode(setCouchbaseIds, nodeWithAssignedProperties, db);
 		}
 		
 		Iterable<LabelEntry> assignedLabels = data.assignedLabels();
@@ -69,7 +73,7 @@ public class Neo4jToCouchbaseTransformer {
 			
 			Node nodeWithAssignedLabel = labelEntry.node();
 			
-			extractPropertyFromNode(setCouchbaseIds, nodeWithAssignedLabel);
+			extractPropertyFromNode(setCouchbaseIds, nodeWithAssignedLabel, db);
 		}
 		
 		Iterable<PropertyEntry<Relationship>> assignedRelationshipProperties = data.assignedRelationshipProperties();
@@ -78,28 +82,28 @@ public class Neo4jToCouchbaseTransformer {
 			
 			Relationship relationshipWithAssignedProperties = propertyEntry.entity();
 			
-			extractPropertyFromRelationship(setCouchbaseIds, relationshipWithAssignedProperties);
+			extractPropertyFromRelationship(setCouchbaseIds, relationshipWithAssignedProperties, db);
 		}
 		
 		Iterable<Relationship> createdRelationships = data.createdRelationships();
 		
 		for (Relationship relationship : createdRelationships) {
 			
-			extractPropertyFromRelationship(setCouchbaseIds, relationship);
+			extractPropertyFromRelationship(setCouchbaseIds, relationship, db);
 		}
 		
 		Iterable<Node> deletedNodes = data.deletedNodes();
 		
 		for (Node node : deletedNodes) {
 			
-			extractPropertyFromNode(setCouchbaseIds, node);
+			extractPropertyFromNode(setCouchbaseIds, node, db);
 		}
 		
 		Iterable<Relationship> deletedRelationships = data.deletedRelationships();
 		
 		for (Relationship relationship : deletedRelationships) {
 			
-			extractPropertyFromRelationship(setCouchbaseIds, relationship);	
+			extractPropertyFromRelationship(setCouchbaseIds, relationship, db);	
 		}
 		
 		Iterable<LabelEntry> removedLabels = data.removedLabels();
@@ -108,7 +112,7 @@ public class Neo4jToCouchbaseTransformer {
 			
 			Node nodeWithRemovedLabel = labelEntry.node();
 			
-			extractPropertyFromNode(setCouchbaseIds, nodeWithRemovedLabel);	
+			extractPropertyFromNode(setCouchbaseIds, nodeWithRemovedLabel, db);	
 		}
 		
 		Iterable<PropertyEntry<Node>> removedNodeProperties = data.removedNodeProperties();
@@ -117,7 +121,7 @@ public class Neo4jToCouchbaseTransformer {
 			
 			Node nodeWithRemovedProperties = propertyEntry.entity();
 			
-			extractPropertyFromNode(setCouchbaseIds, nodeWithRemovedProperties);
+			extractPropertyFromNode(setCouchbaseIds, nodeWithRemovedProperties, db);
 		}
 		
 		Iterable<PropertyEntry<Relationship>> removedRelationshipProperties = data.removedRelationshipProperties();
@@ -126,7 +130,7 @@ public class Neo4jToCouchbaseTransformer {
 			
 			Relationship relationshipWithRemovedProperties = propertyEntry.entity();
 			
-			extractPropertyFromRelationship(setCouchbaseIds, relationshipWithRemovedProperties);
+			extractPropertyFromRelationship(setCouchbaseIds, relationshipWithRemovedProperties, db);
 		}
 		
 		LOGGER.debug("Couchbase ids");
@@ -134,31 +138,66 @@ public class Neo4jToCouchbaseTransformer {
 		for (Object couchbaseId : setCouchbaseIds) {
 			
 			LOGGER.debug(couchbaseId.toString());
+			
+			String rows = "";
+			
+			try (Result result = 
+			    		 db.execute( "MATCH (root {"+COUCHBASE_ID_PROPERTY_KEY+": '"+couchbaseId+"'}) "
+			    		 		   + "WHERE NOT ({"+COUCHBASE_ID_PROPERTY_KEY+": '"+couchbaseId+"'})-[]->(root) "
+			    		 		   + "WITH root "
+			    		 		   + "MATCH (n {"+COUCHBASE_ID_PROPERTY_KEY+": '"+couchbaseId+"'}) "
+			    		 		   + "OPTIONAL MATCH (n)-[r {"+COUCHBASE_ID_PROPERTY_KEY+": '"+couchbaseId+"'}]->(m) "
+			    				   + "RETURN root, n, collect(DISTINCT m) as m" ) )
+			{
+			    while ( result.hasNext() )
+			    {
+			        Map<String,Object> row = result.next();
+			        Node root = (Node) row.get("root");
+			        Node parent = (Node) row.get("n");
+			        List<Node> children = (List<Node>) row.get("m");
+			        
+//			        for ( Entry<String,Object> column : row.entrySet() )
+//			        {
+//			            rows += column.getKey() + ": " + ((Node) column.getValue()).getId() + "; ";
+//			        }
+			        
+			        rows += "n: " + parent.getId() + ", m:" + ((children != null) ? children.size() : 0);
+			        rows += "\n";
+			    }
+			}
+			
+			LOGGER.debug("ROWS: " + rows);
 		}	
 	}
 
-	private void extractPropertyFromRelationship(Set<Object> setCouchbaseIds, Relationship relationshipWithAssignedProperties) {
+	private void extractPropertyFromRelationship(Set<Object> setCouchbaseIds, Relationship relationshipWithAssignedProperties, GraphDatabaseService db) {
 		
-		Map<String, Object> allProperties = relationshipWithAssignedProperties.getAllProperties();
-		
-		for (String property : allProperties.keySet()) {
+		try (Transaction tx = db.beginTx()) {
 			
-			if (property.equals(COUCHBASE_ID_PROPERTY_KEY)) {
+			Map<String, Object> allProperties = relationshipWithAssignedProperties.getAllProperties();
+			
+			for (String property : allProperties.keySet()) {
 				
-				setCouchbaseIds.add(allProperties.get(property));
+				if (property.equals(COUCHBASE_ID_PROPERTY_KEY)) {
+					
+					setCouchbaseIds.add(allProperties.get(property));
+				}
 			}
 		}
 	}
 
-	private void extractPropertyFromNode(Set<Object> setCouchbaseIds, Node node) {
+	private void extractPropertyFromNode(Set<Object> setCouchbaseIds, Node node, GraphDatabaseService db) {
 		
-		Map<String, Object> allProperties = node.getAllProperties();
-		
-		for (String property : allProperties.keySet()) {
+		try (Transaction tx = db.beginTx()) {
 			
-			if (property.equals(COUCHBASE_ID_PROPERTY_KEY)) {
+			Map<String, Object> allProperties = node.getAllProperties();
+			
+			for (String property : allProperties.keySet()) {
 				
-				setCouchbaseIds.add(allProperties.get(property));
+				if (property.equals(COUCHBASE_ID_PROPERTY_KEY)) {
+					
+					setCouchbaseIds.add(allProperties.get(property));
+				}
 			}
 		}
 	}
