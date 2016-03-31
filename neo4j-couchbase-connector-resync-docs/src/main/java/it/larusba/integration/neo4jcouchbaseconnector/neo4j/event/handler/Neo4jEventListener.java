@@ -21,48 +21,38 @@ package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 import java.util.List;
 
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.event.LabelEntry;
-import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 
 import it.larusba.integration.neo4jcouchbaseconnector.neo4j.transformer.Neo4jToCouchbaseTransformer;
 
 /**
- * This class is responsible for filtering and routing events to the Couchbase
- * in the form of N1QL statements.
- * <p/>
- * PLEASE NOTICE: this class just meant to showcase how the
- * {@link TransactionEventHandler} works. <br/>
- * It implements a {@link TransactionEventHandler} that prints the data that has
- * changed during the course of one transaction. <br/>
- * TODO print all other info provided by the {@link TransactionData} parameter
- *
- * @author Lorenzo Speranzoni
+ * @author Lorenzo Speranzoni, Mauro Roiter
  * 
  * @see TransactionEventHandler, TransactionData
  */
 public class Neo4jEventListener implements TransactionEventHandler<Void> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(Neo4jEventListener.class);
+
 	private GraphDatabaseService db;
-	
+
 	public Neo4jEventListener(GraphDatabaseService db) {
 
 		this.db = db;
 	}
-	
+
 	/**
 	 * @see org.neo4j.graphdb.event.TransactionEventHandler#beforeCommit(org.neo4j.graphdb.event.TransactionData)
 	 */
 	public Void beforeCommit(TransactionData data) throws Exception {
-		LOGGER.debug("Transaction is about to be committed.");
-//		printTransactionData(data);
 		return null;
 	}
 
@@ -71,30 +61,13 @@ public class Neo4jEventListener implements TransactionEventHandler<Void> {
 	 *      java.lang.Object)
 	 */
 	public void afterCommit(TransactionData data, Void state) {
-		LOGGER.debug("Transaction has been committed successfully.");
-//		printTransactionData(data);
-		buildJSONDocument(data);
-		
-		/*List<JsonDocument> jsonDocument = buildJSONDocument(data);
-		
-		if (jsonDocument != null)
-		{			
-			// Connect to localhost
-			Cluster cluster = CouchbaseCluster.create();
+
+		List<JsonDocument> jsonDocuments = buildJSONDocument(data);
+
+		if (jsonDocuments != null) {
 			
-			// Open the default bucket 
-			Bucket defaultBucket = cluster.openBucket();
-			
-			
-			for (JsonDocument document : jsonDocument) {
-				
-				defaultBucket.upsert(document);
-			}
-			
-			
-			// Disconnect and clear all allocated resources
-			cluster.disconnect();
-		}*/
+			sendJSONDocumentsToCouchbase(jsonDocuments);
+		}
 	}
 
 	/**
@@ -102,60 +75,39 @@ public class Neo4jEventListener implements TransactionEventHandler<Void> {
 	 *      java.lang.Object)
 	 */
 	public void afterRollback(TransactionData data, Void state) {
-		LOGGER.debug("Transaction has rolled back for some reason.");
-		printTransactionData(data);
 	}
 
 	/**
 	 * 
 	 * @param data
-	 *            the data that has changed during the course of one transaction
-	 */
-	public void printTransactionData(TransactionData data) {
-		printLabelAssigned(data);
-		printNodePropertiesAssigned(data);
-	}
-
-	/**
-	 * It prints all new labels that have been assigned during the transaction.
-	 * 
-	 * @param data
-	 *            the data that has changed during the course of one transaction
-	 */
-	public void printLabelAssigned(TransactionData data) {
-		LOGGER.debug("Labels assigned:");
-		Iterable<LabelEntry> assignedLabels = data.assignedLabels();
-		for (LabelEntry assignedLabel : assignedLabels) {
-			LOGGER.debug(assignedLabel.label().name());
-		}
-	}
-
-	/**
-	 * 
-	 * @param data
-	 *            the data that has changed during the course of one transaction
-	 */
-	public void printNodePropertiesAssigned(TransactionData data) {
-		LOGGER.debug("Node properties assigned:");
-		Iterable<PropertyEntry<Node>> assignedNodeProperties = data.assignedNodeProperties();
-		for (PropertyEntry<Node> assignedNodeProperty : assignedNodeProperties) {
-			LOGGER.debug(assignedNodeProperty.key() + ": " + assignedNodeProperty.value());
-		}
-	}
-	
-	/**
-	 * 
-	 * @param data
-	 * 			  the data that has changed during the course of one transaction
+	 *          the data that has changed during the course of one transaction
 	 */
 	public List<JsonDocument> buildJSONDocument(TransactionData data) {
 
 		LOGGER.debug("Starting transofrm data from Cypher to JSON...");
-				
+
 		Neo4jToCouchbaseTransformer transformer = new Neo4jToCouchbaseTransformer();
-		
+
 		transformer.transform(data, this.db);
-		
+
 		return null;
+	}
+
+	/**
+	 * 
+	 * @param jsonDocuments
+	 */
+	public void sendJSONDocumentsToCouchbase(List<JsonDocument> jsonDocuments) {
+		
+		Cluster cluster = CouchbaseCluster.create();
+
+		Bucket defaultBucket = cluster.openBucket();
+
+		for (JsonDocument jsonDocument : jsonDocuments) {
+
+			defaultBucket.upsert(jsonDocument);
+		}
+
+		cluster.disconnect();
 	}
 }
