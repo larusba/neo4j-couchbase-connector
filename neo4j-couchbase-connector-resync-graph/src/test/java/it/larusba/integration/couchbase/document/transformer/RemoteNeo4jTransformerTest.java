@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.larusba.integration.neo4jcouchbaseconnector.couchbase.document.transformer;
+package it.larusba.integration.couchbase.document.transformer;
 
 import org.junit.Test;
 
