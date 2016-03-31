@@ -17,9 +17,7 @@ and 1 examples folder:
 
 * [Examples](neo4j-couchbase-connector-examples): containing a set of examples showing how to use the [Neo4j - Couchbase Connector](https://github.com/larusba/neo4j-couchbase-connector). 
 
-<center>
 <img src="https://raw.githubusercontent.com/larusba/neo4j-couchbase-connector/master/neo4j-couchbase-connector-architecture.png" width="500" />
-</center>
 
 ## Sources of Inspiration
 
