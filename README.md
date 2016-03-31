@@ -19,7 +19,7 @@ and 1 examples folder:
 
 
 
-<div style="text-align:center">
+<div style="align:center">
   <img src="https://raw.githubusercontent.com/larusba/neo4j-couchbase-connector/master/neo4j-couchbase-connector-architecture.png" width="500" />
 </div>
 
