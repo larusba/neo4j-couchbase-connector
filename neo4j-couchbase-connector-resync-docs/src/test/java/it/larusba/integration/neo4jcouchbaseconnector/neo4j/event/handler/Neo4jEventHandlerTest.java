@@ -18,6 +18,7 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
+import java.io.File;
 import java.sql.SQLException;
 
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.TransactionEventHandler;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
 /**
@@ -66,7 +68,7 @@ public class Neo4jEventHandlerTest {
 	public void shouldTransformCypherToJSONDoc() throws SQLException {
 		
 		String cypherStatement = "MERGE (person:Person { firstname: 'Lorenzo' }) "
-							   + "SET person.couchbaseId = 'documentKey', "
+							   + "SET person.documentId = 'documentKey', "
 							   + "person.birthdate = '01/04/1974', "
 							   + "person.lastname = 'Speranzoni', "
 							   + "person.age = 41, "
@@ -74,17 +76,41 @@ public class Neo4jEventHandlerTest {
 							   + "RETURN person";
 		
 		String cypherStatement2 = "MERGE (person:Person { firstname: 'Mauro' }) "
-				   + "SET person.couchbaseId = 'documentKey2', "
+//				   + "SET person.documentId = 'documentKey2', "
+				   + "SET person.documentId = 'documentKey', "
 				   + "person.birthdate = '19/09/1986', "
 				   + "person.lastname = 'Roiter', "
 				   + "person.age = 29, "
 				   + "person.job = 'Developer @ LARUS Business Automation'"
 				   + "RETURN person";
 		
+		String cypherStatement4 = "MERGE (person:Person { firstname: 'Riccardo' }) "
+//				   + "SET person.documentId = 'documentKey3', "
+				   + "SET person.documentId = 'documentKey', "
+				   + "person.birthdate = '02/09/1985', "
+				   + "person.lastname = 'Birello', "
+				   + "person.age = 30, "
+				   + "person.job = 'Developer @ LARUS Business Automation'"
+				   + "RETURN person";
+		
+		String cypherStatement6 = "MERGE (person:Person { firstname: 'Marco' }) "
+//				   + "SET person.documentId = 'documentKey3', "
+				   + "SET person.birthdate = '01/05/1988', "
+				   + "person.lastname = 'Falcier', "
+				   + "person.age = 30, "
+				   + "person.job = 'Developer @ LARUS Business Automation'"
+				   + "RETURN person";
+		
 		String cypherStatement3 = "MATCH (a:Person),(b:Person) "
 		+ "WHERE a.firstname = 'Lorenzo' AND b.firstname = 'Mauro' "
-		+ "MERGE (a)-[r:COLLEAGUE { couchbaseId : 'documentKey' }]->(b) "
+		+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey' }]->(b) "
 		+ "RETURN r";
+		
+		String cypherStatement5 = "MATCH (a:Person),(b:Person) "
+				+ "WHERE a.firstname = 'Mauro' AND b.firstname = 'Riccardo' "
+//				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey2' }]->(b) "
+				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey' }]->(b) "
+				+ "RETURN r";
 		
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
 //		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
@@ -96,6 +122,8 @@ public class Neo4jEventHandlerTest {
 			database.execute(cypherStatement);
 			database.execute(cypherStatement2);
 			database.execute(cypherStatement3);
+			database.execute(cypherStatement4);
+			database.execute(cypherStatement5);
 			
 			tx.success();
 		}
