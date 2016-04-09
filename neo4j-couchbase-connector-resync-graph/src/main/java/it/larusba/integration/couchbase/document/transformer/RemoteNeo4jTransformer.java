@@ -34,7 +34,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.larusba.integration.couchbase.document.bean.JsonDocument;
+import it.larusba.integration.common.document.bean.JsonDocument;
 
 /**
  * {@link DocumentTransformer} a REST call to a Neo4j Server Extension which is
@@ -55,7 +55,7 @@ public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
 
 		try {
 
-			transformJson2Cypher(documentType, jsonDocument);
+			transformJson2Cypher(documentKey, documentType, jsonDocument);
 		} catch (IOException e) {
 
 			returnMessage = "Error during JSON transformation";
@@ -71,7 +71,7 @@ public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
 	 * 
 	 * @throws IOException
 	 */
-	private void transformJson2Cypher(String documentType, String jsonDocument) throws IOException {
+	private void transformJson2Cypher(String documentKey, String documentType, String jsonDocument) throws IOException {
 
 		Properties prop = new Properties();
 		String propFileName = "transformer.properties";
@@ -87,7 +87,7 @@ public class RemoteNeo4jTransformer implements DocumentTransformer<String> {
 		// get the URL property value
 		String urlJson2Cypher = prop.getProperty("transformer.url");
 
-		JsonDocument documentToTransform = new JsonDocument(jsonDocument, documentType);
+		JsonDocument documentToTransform = new JsonDocument(documentKey, jsonDocument, documentType);
 
 		HttpClient httpClient = HttpClientBuilder.create().build();
 
