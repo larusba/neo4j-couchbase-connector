@@ -76,7 +76,6 @@ public class Neo4jEventHandlerTest {
 							   + "RETURN person";
 		
 		String cypherStatement2 = "MERGE (person:Person { firstname: 'Mauro' }) "
-//				   + "SET person.documentId = 'documentKey2', "
 				   + "SET person.documentId = 'documentKey', "
 				   + "person.birthdate = '19/09/1986', "
 				   + "person.lastname = 'Roiter', "
@@ -85,7 +84,6 @@ public class Neo4jEventHandlerTest {
 				   + "RETURN person";
 		
 		String cypherStatement4 = "MERGE (person:Person { firstname: 'Riccardo' }) "
-//				   + "SET person.documentId = 'documentKey3', "
 				   + "SET person.documentId = 'documentKey', "
 				   + "person.birthdate = '02/09/1985', "
 				   + "person.lastname = 'Birello', "
@@ -94,12 +92,19 @@ public class Neo4jEventHandlerTest {
 				   + "RETURN person";
 		
 		String cypherStatement6 = "MERGE (person:Person { firstname: 'Marco' }) "
-//				   + "SET person.documentId = 'documentKey3', "
-				   + "SET person.birthdate = '01/05/1988', "
+				   + "SET person.documentId = 'documentKey', "
+				   + "person.birthdate = '01/05/1988', "
 				   + "person.lastname = 'Falcier', "
-				   + "person.age = 30, "
+				   + "person.age = 27, "
 				   + "person.job = 'Developer @ LARUS Business Automation'"
 				   + "RETURN person";
+		
+		String cypherStatement7 = "MERGE (company:Company { name: 'LARUS Business Automation' }) "
+				   + "SET company.documentId = 'documentKey', "
+				   + "company.city = 'Venezia', "
+				   + "company.website = 'www.larus-ba.it', "
+				   + "company.services = ['Sviluppo Software Custom', 'Consulenza e Coaching', 'Scuola di formazione']"
+				   + "RETURN company";
 		
 		String cypherStatement3 = "MATCH (a:Person),(b:Person) "
 		+ "WHERE a.firstname = 'Lorenzo' AND b.firstname = 'Mauro' "
@@ -108,7 +113,16 @@ public class Neo4jEventHandlerTest {
 		
 		String cypherStatement5 = "MATCH (a:Person),(b:Person) "
 				+ "WHERE a.firstname = 'Mauro' AND b.firstname = 'Riccardo' "
-//				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey2' }]->(b) "
+				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey' }]->(b) "
+				+ "RETURN r";
+		
+		String cypherStatement8 = "MATCH (a:Person),(b:Company) "
+				+ "WHERE a.firstname = 'Lorenzo' AND b.name = 'LARUS Business Automation' "
+				+ "MERGE (a)-[r:CEO { documentId : 'documentKey' }]->(b) "
+				+ "RETURN r";
+		
+		String cypherStatement9 = "MATCH (a:Person),(b:Person) "
+				+ "WHERE a.firstname = 'Lorenzo' AND b.firstname = 'Marco' "
 				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey' }]->(b) "
 				+ "RETURN r";
 		
@@ -124,6 +138,10 @@ public class Neo4jEventHandlerTest {
 			database.execute(cypherStatement3);
 			database.execute(cypherStatement4);
 			database.execute(cypherStatement5);
+			database.execute(cypherStatement6);
+			database.execute(cypherStatement7);
+			database.execute(cypherStatement8);
+			database.execute(cypherStatement9);
 			
 			tx.success();
 		}
