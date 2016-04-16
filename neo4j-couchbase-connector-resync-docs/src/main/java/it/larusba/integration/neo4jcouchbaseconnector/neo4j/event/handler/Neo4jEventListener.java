@@ -88,9 +88,9 @@ public class Neo4jEventListener implements TransactionEventHandler<Void> {
 
 		Neo4jToCouchbaseTransformer transformer = new Neo4jToCouchbaseTransformer();
 
-		transformer.transform(data, this.db);
+		List<JsonDocument> jsonDocuments = transformer.transform(data, this.db);
 
-		return null;
+		return jsonDocuments;
 	}
 
 	/**
