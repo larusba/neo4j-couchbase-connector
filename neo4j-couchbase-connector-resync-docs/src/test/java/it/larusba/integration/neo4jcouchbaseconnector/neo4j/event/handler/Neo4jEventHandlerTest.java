@@ -18,6 +18,7 @@
  */
 package it.larusba.integration.neo4jcouchbaseconnector.neo4j.event.handler;
 
+import java.io.File;
 import java.sql.SQLException;
 
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.TransactionEventHandler;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
 /**
@@ -144,4 +146,26 @@ public class Neo4jEventHandlerTest {
 			tx.success();
 		}
 	}
+	
+	@Test
+	public void shouldTransformCypherAlbumsToJSONDoc() throws SQLException {
+		
+//		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
+		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
+		
+		database.registerTransactionEventHandler(new Neo4jEventListener(database));
+		
+		String cypher = "MATCH (n) "
+						+ "WHERE n.name = \"Volcano\" "
+						+ "WITH n "
+						+ "SET n.explicit = true "
+						+ "RETURN n";
+		
+		try (Transaction tx = database.beginTx()) {
+
+			database.execute(cypher);
+			tx.success();
+		}
+	}
+	
 }

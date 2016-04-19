@@ -75,7 +75,7 @@ public class Neo4jToCouchbaseTransformer {
 							  + "WHERE exists(n."+COUCHBASE_ID_PROPERTY_KEY+") AND '"+documentId+"' IN (n."+COUCHBASE_ID_PROPERTY_KEY+") "
 							  + "OPTIONAL MATCH (n)-[r]->(m) "
 							  + "WHERE exists(r."+COUCHBASE_ID_PROPERTY_KEY+") AND '"+documentId+"' IN (r."+COUCHBASE_ID_PROPERTY_KEY+") "
-//							  + "AND exists(m."+COUCHBASE_ID_PROPERTY_KEY+") AND '"+documentId+"' IN (m."+COUCHBASE_ID_PROPERTY_KEY+") "
+							  + "AND exists(m."+COUCHBASE_ID_PROPERTY_KEY+") AND '"+documentId+"' IN (m."+COUCHBASE_ID_PROPERTY_KEY+") "
 							  + "WITH n, "
 							  + "     r, "
 //							  + "     m, "
@@ -86,7 +86,7 @@ public class Neo4jToCouchbaseTransformer {
 //							  + "     m, "
 							  + "     REDUCE(x=0, id in range(0, size(docs)-1) | case when r."+COUCHBASE_ID_PROPERTY_KEY+"[id] = '"+documentId+"' then id else 0 end) as position, "
 							  + "     REDUCE(x=0, id in range(0, size(depths)-1) | case when r."+COUCHBASE_ID_PROPERTY_KEY+"[id] = '"+documentId+"' then r.depth[id] else 0 end) as depth "
-							  + "RETURN DISTINCT n, r, depth, position" ) )
+							  + "RETURN DISTINCT n, r, toInt(depth) as depth, toInt(position) as position" ) )
 			{
 			    while ( result.hasNext() )
 			    {
@@ -94,16 +94,17 @@ public class Neo4jToCouchbaseTransformer {
 			        Node parent = (Node) row.get("n");
 			        Relationship rel = (Relationship) row.get("r");
 			        
+			        System.out.println(rel);
+			        
 			        parentsSet.add(parent);
 			        
 			        if(mapParentRels.get(parent) == null) {
 						
 			        	Map<String, List<Relationship>> mapRels = new HashMap<>();
-			        	
-						List<Relationship> listRels = new ArrayList<>();
 
 						if (rel != null) {
 							
+							List<Relationship> listRels = new ArrayList<>();
 							listRels.add(rel);
 							mapRels.put(rel.getType().name(), listRels);
 							mapParentRels.put(parent, mapRels);
@@ -113,19 +114,30 @@ public class Neo4jToCouchbaseTransformer {
 							mapParentRels.put(parent, null);
 						}
 					}
-					else {
-						
+			        else {
+
 						Map<String, List<Relationship>> mapRels = mapParentRels.get(parent);
-						
+
 						if (mapRels != null) {
-							
+
+							boolean relTypeExists = false;
+
 							for (String relTypeName : mapRels.keySet()) {
-									
+
 								if (relTypeName.equals(rel.getType().name())) {
+									relTypeExists = true;
 									List<Relationship> listRels = mapRels.get(rel.getType().name());
 									listRels.add(rel);
 								}
 							}
+
+							if (!relTypeExists) {
+
+								List<Relationship> listRelsNew = new ArrayList<>();
+								listRelsNew.add(rel);
+								mapRels.put(rel.getType().name(), listRelsNew);
+							}
+
 						}
 					}
 			    }
