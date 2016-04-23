@@ -155,12 +155,14 @@ public class Neo4jToCouchbaseTransformer {
 			LOGGER.debug(documentId.toString());
 			
 			try (Result result = 
-			    		 db.execute( "MATCH (root {"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'}) "
-			    		 		   + "WHERE NOT ({"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'})-[]->(root) "
-			    		 		   + "WITH root "
-			    		 		   + "MATCH (n {"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'}) "
-			    		 		   + "OPTIONAL MATCH (n)-[r {"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'}]->(m {"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'}) "
-			    				   + "RETURN root, n, collect(DISTINCT m) as m" ) )
+			    		 db.execute( "MATCH (root) "
+			    		 		       + "WHERE '" + documentId + "' IN (root." + COUCHBASE_ID_PROPERTY_KEY + ") "
+			    		 		       + "AND NOT (parent)-[]->(root) "
+			    		 		       + "WITH root "
+			    		 		       + "MATCH (n) "
+			    		 		       + "WHERE '" + documentId + "' IN (n." + COUCHBASE_ID_PROPERTY_KEY + ") "
+			    		 		       + "OPTIONAL MATCH (n)-[r {"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'}]->(m {"+COUCHBASE_ID_PROPERTY_KEY+": '"+documentId+"'}) "
+			    				       + "RETURN root, n, collect(DISTINCT m) as m" ) )
 			{
 			    while ( result.hasNext() )
 			    {
