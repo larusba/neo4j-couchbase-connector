@@ -68,7 +68,7 @@ public class Neo4jEventHandlerTest {
 	public void shouldTransformCypherToJSONDoc() throws SQLException {
 		
 		String cypherStatement = "MERGE (person:Person { firstname: 'Lorenzo' }) "
-							   + "SET person.documentId = 'documentKey', "
+							   + "SET person.documentIds = ['documentKey'], "
 							   + "person.birthdate = '01/04/1974', "
 							   + "person.lastname = 'Speranzoni', "
 							   + "person.age = 41, "
@@ -76,8 +76,7 @@ public class Neo4jEventHandlerTest {
 							   + "RETURN person";
 		
 		String cypherStatement2 = "MERGE (person:Person { firstname: 'Mauro' }) "
-//				   + "SET person.documentId = 'documentKey2', "
-				   + "SET person.documentId = 'documentKey', "
+				   + "SET person.documentIds = ['documentKey'], "
 				   + "person.birthdate = '19/09/1986', "
 				   + "person.lastname = 'Roiter', "
 				   + "person.age = 29, "
@@ -85,8 +84,7 @@ public class Neo4jEventHandlerTest {
 				   + "RETURN person";
 		
 		String cypherStatement4 = "MERGE (person:Person { firstname: 'Riccardo' }) "
-//				   + "SET person.documentId = 'documentKey3', "
-				   + "SET person.documentId = 'documentKey', "
+				   + "SET person.documentIds = ['documentKey'], "
 				   + "person.birthdate = '02/09/1985', "
 				   + "person.lastname = 'Birello', "
 				   + "person.age = 30, "
@@ -94,22 +92,38 @@ public class Neo4jEventHandlerTest {
 				   + "RETURN person";
 		
 		String cypherStatement6 = "MERGE (person:Person { firstname: 'Marco' }) "
-//				   + "SET person.documentId = 'documentKey3', "
-				   + "SET person.birthdate = '01/05/1988', "
+				   + "SET person.documentIds = ['documentKey'], "
+				   + "person.birthdate = '01/05/1988', "
 				   + "person.lastname = 'Falcier', "
-				   + "person.age = 30, "
+				   + "person.age = 27, "
 				   + "person.job = 'Developer @ LARUS Business Automation'"
 				   + "RETURN person";
 		
+		String cypherStatement7 = "MERGE (company:Company { name: 'LARUS Business Automation' }) "
+				   + "SET company.documentIds = ['documentKey'], "
+				   + "company.city = 'Venezia', "
+				   + "company.website = 'www.larus-ba.it', "
+				   + "company.services = ['Sviluppo Software Custom', 'Consulenza e Coaching', 'Scuola di formazione']"
+				   + "RETURN company";
+		
 		String cypherStatement3 = "MATCH (a:Person),(b:Person) "
 		+ "WHERE a.firstname = 'Lorenzo' AND b.firstname = 'Mauro' "
-		+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey' }]->(b) "
+		+ "MERGE (a)-[r:COLLEAGUE { documentIds : ['documentKey'], property: 'colleagues', depth: [1] }]->(b) "
 		+ "RETURN r";
 		
 		String cypherStatement5 = "MATCH (a:Person),(b:Person) "
 				+ "WHERE a.firstname = 'Mauro' AND b.firstname = 'Riccardo' "
-//				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey2' }]->(b) "
-				+ "MERGE (a)-[r:COLLEAGUE { documentId : 'documentKey' }]->(b) "
+				+ "MERGE (a)-[r:COLLEAGUE { documentIds : ['documentKey'], property: 'colleagues', depth: [2] }]->(b) "
+				+ "RETURN r";
+		
+		String cypherStatement8 = "MATCH (a:Person),(b:Company) "
+				+ "WHERE a.firstname = 'Lorenzo' AND b.name = 'LARUS Business Automation' "
+				+ "MERGE (a)-[r:CEO { documentIds : ['documentKey'], property: 'company', depth: [1] }]->(b) "
+				+ "RETURN r";
+		
+		String cypherStatement9 = "MATCH (a:Person),(b:Person) "
+				+ "WHERE a.firstname = 'Lorenzo' AND b.firstname = 'Marco' "
+				+ "MERGE (a)-[r:COLLEAGUE { documentIds : ['documentKey'], property: 'colleagues', depth: [1] }]->(b) "
 				+ "RETURN r";
 		
 		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
@@ -124,8 +138,34 @@ public class Neo4jEventHandlerTest {
 			database.execute(cypherStatement3);
 			database.execute(cypherStatement4);
 			database.execute(cypherStatement5);
+			database.execute(cypherStatement6);
+			database.execute(cypherStatement7);
+			database.execute(cypherStatement8);
+			database.execute(cypherStatement9);
 			
 			tx.success();
 		}
 	}
+	
+	@Test
+	public void shouldTransformCypherAlbumsToJSONDoc() throws SQLException {
+		
+//		GraphDatabaseService database = new TestGraphDatabaseFactory().newImpermanentDatabase();
+		GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(new File("/Applications/Development/Neo4j-2.3.2/neo4j-community-2.3.2/data/graph.db"));
+		
+		database.registerTransactionEventHandler(new Neo4jEventListener(database));
+		
+		String cypher = "MATCH (n) "
+						+ "WHERE n.name = \"Volcano\" "
+						+ "WITH n "
+						+ "SET n.explicit = true "
+						+ "RETURN n";
+		
+		try (Transaction tx = database.beginTx()) {
+
+			database.execute(cypher);
+			tx.success();
+		}
+	}
+	
 }
