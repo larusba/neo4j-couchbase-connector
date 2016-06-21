@@ -14,7 +14,7 @@ We'd also like to thank for their precious support:
 
 ## License
 
-Copyright (c) 2016 http://www.larus-ba.it[LARUS Business Automation]
+Copyright (c) 2016 [LARUS Business Automation](http://www.larus-ba.it)
 
 This file is part of the "LARUS Integration Framework for Neo4j".
 
